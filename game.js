@@ -115,7 +115,7 @@ function update(dt) {
 
         // Update Enemies
         enemies.forEach(enemy => {
-            enemy.update(dt, player, gameMap, { spawnEnemyProjectile });
+            enemy.update(dt, player, gameMap, { spawnEnemyProjectile, waveManager, enemies });
 
             // Collision: Player vs Enemy (Contact Damage)
             if (!enemy.isJumping && checkCollision(player, enemy)) {
