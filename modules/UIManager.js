@@ -28,6 +28,9 @@ export class UIManager {
             time: document.getElementById('time-display'),
             gold: document.getElementById('gold-display'),
             hp: document.getElementById('hp-display'),
+            waveInfo: document.getElementById('hud-wave-info'),
+            modifier: document.getElementById('hud-modifier'),
+            challenge: document.getElementById('hud-challenge'),
             stats: {
                 dmg: document.getElementById('hud-damage'),
                 rate: document.getElementById('hud-firerate'),
@@ -162,6 +165,21 @@ export class UIManager {
         if (waveManager && waveManager.waveActive) {
             const remaining = waveManager.getRemainingEnemies();
             this.hudElements.wave.innerText = `${state.wave} (Left: ${remaining})`;
+
+            // Update Wave Info Panel
+            const modName = waveManager.currentModifierName;
+            const challenge = waveManager.currentChallenge;
+
+            if (modName || challenge) {
+                this.hudElements.waveInfo.classList.remove('hidden');
+                this.hudElements.modifier.innerText = modName ? `⚠️ ${modName}` : '';
+                this.hudElements.modifier.style.display = modName ? 'block' : 'none';
+                
+                this.hudElements.challenge.innerText = challenge ? `🎯 ${challenge.label}` : '';
+                this.hudElements.challenge.style.display = challenge ? 'block' : 'none';
+            } else {
+                this.hudElements.waveInfo.classList.add('hidden');
+            }
         }
     }
 
@@ -254,10 +272,23 @@ export class UIManager {
         });
     }
 
-    openIngameShop(player, onComplete) {
+    openIngameShop(player, onComplete, lastWaveResult) {
         this.showScreen('shop');
         const container = document.getElementById('upgrade-cards');
         container.innerHTML = '';
+
+        // Show Challenge Result
+        const title = document.querySelector('#shop-layer h1');
+        if (lastWaveResult && lastWaveResult.challenge) {
+            const c = lastWaveResult.challenge;
+            const success = lastWaveResult.success;
+            const bonusText = success ? '<span style="color:#0f0"> (+50 GOLD)</span>' : '';
+            title.innerHTML = `WAVE COMPLETE<br><span style="font-size:0.6em; color:${success ? '#0f0' : '#f00'}">
+                CHALLENGE: ${c.label} - ${success ? 'COMPLETE!' : 'FAILED'} ${bonusText}
+            </span>`;
+        } else {
+            title.innerText = 'WAVE COMPLETE!';
+        }
 
         const options = Shop.generateOptions();
         const cards = [];
@@ -304,5 +335,27 @@ export class UIManager {
         
         document.getElementById('final-wave').innerText = state.wave;
         document.getElementById('run-gold').innerText = state.gold;
+    }
+
+    showWaveStartOverlay(wave, modifierName, challenge) {
+        const overlay = document.getElementById('wave-start-overlay');
+        const title = document.getElementById('ws-title');
+        const modText = document.getElementById('ws-modifier');
+        const challText = document.getElementById('ws-challenge');
+
+        title.innerText = `WAVE ${wave}`;
+        modText.innerText = modifierName || '';
+        challText.innerText = challenge ? `🎯 ${challenge.label}: ${challenge.description}` : '';
+
+        overlay.classList.remove('hidden');
+        overlay.classList.add('fade-in');
+
+        setTimeout(() => {
+            overlay.classList.add('fade-out');
+            setTimeout(() => {
+                overlay.classList.remove('fade-in', 'fade-out');
+                overlay.classList.add('hidden');
+            }, 500);
+        }, 2500);
     }
 }

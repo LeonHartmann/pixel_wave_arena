@@ -43,6 +43,13 @@
                     GOLD: <span id="gold-display">0</span>
                 </div>
             </div>
+            
+            <!-- Wave Info Panel -->
+            <div id="hud-wave-info" class="hidden">
+                <div id="hud-modifier" class="hud-info-line"></div>
+                <div id="hud-challenge" class="hud-info-line"></div>
+            </div>
+
             <div id="hud-bottom">
                 <div class="hud-item">
                     <img class="hud-icon" id="hp-icon" alt="">
@@ -351,6 +358,13 @@
                 <button id="quit-btn" class="menu-btn pixel-btn">QUIT TO MENU</button>
             </div>
             <p class="pause-hint">Press ESC to resume</p>
+        </div>
+
+        <!-- Wave Start Overlay -->
+        <div id="wave-start-overlay" class="hidden">
+            <h1 id="ws-title">WAVE 1</h1>
+            <h2 id="ws-modifier"></h2>
+            <h3 id="ws-challenge"></h3>
         </div>
     </div>
     <script src="game.js" type="module"></script>

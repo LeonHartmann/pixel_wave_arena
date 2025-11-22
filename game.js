@@ -404,8 +404,15 @@ function startGame(worldId) {
             player,
             enemies,
             gameMap,
-            onWaveComplete: () => {
-                openShop();
+            onWaveComplete: (result) => {
+                if (result && result.success) {
+                    // Bonus Gold for Challenge
+                    const bonus = 50;
+                    STATE.gold += bonus;
+                    Persistence.addGold(bonus);
+                    console.log(`Challenge Bonus: +${bonus} Gold`);
+                }
+                openShop(result);
             },
             onWorldClear: () => {
                 victory();
@@ -414,6 +421,7 @@ function startGame(worldId) {
         waveManager = new WaveManager(gameInterface);
         waveManager.setWorld(STATE.currentWorld);
         waveManager.startWave();
+        uiManager.showWaveStartOverlay(STATE.wave, waveManager.currentModifierName, waveManager.currentChallenge);
 
         STATE.current = 'PLAYING';
         console.log('Game started successfully');
@@ -423,11 +431,11 @@ function startGame(worldId) {
     }
 }
 
-function openShop() {
+function openShop(lastWaveResult) {
     STATE.current = 'SHOP';
     uiManager.openIngameShop(player, () => {
         closeShop();
-    });
+    }, lastWaveResult);
 }
 
 function closeShop() {
@@ -436,6 +444,7 @@ function closeShop() {
     STATE.wave++;
     waveManager.wave++;
     waveManager.startWave();
+    uiManager.showWaveStartOverlay(STATE.wave, waveManager.currentModifierName, waveManager.currentChallenge);
 }
 
 function pauseGame() {

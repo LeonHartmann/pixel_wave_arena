@@ -16,16 +16,40 @@ export class WaveManager {
 
         // Wave Modifier Types
         this.WAVE_MODIFIERS = {
-            SPEED: { name: 'SPEED WAVE', speedMult: 1.4, hpMult: 1.0, countMult: 1.0 },
-            HORDE: { name: 'HORDE WAVE', speedMult: 1.0, hpMult: 0.7, countMult: 1.5 },
-            ARMORED: { name: 'ARMORED WAVE', speedMult: 0.8, hpMult: 1.8, countMult: 1.0 },
-            ELITE: { name: 'ELITE WAVE', speedMult: 1.0, hpMult: 2.5, countMult: 0.5 }
+            SPEED: { name: 'SPEED WAVE', description: 'Enemies move faster.', speedMult: 1.4, hpMult: 1.0, countMult: 1.0 },
+            HORDE: { name: 'HORDE WAVE', description: 'More, weaker enemies.', speedMult: 1.0, hpMult: 0.7, countMult: 1.5 },
+            ARMORED: { name: 'ARMORED WAVE', description: 'Fewer, tankier enemies.', speedMult: 0.8, hpMult: 1.8, countMult: 1.0 },
+            ELITE: { name: 'ELITE WAVE', description: 'Fewer, much stronger enemies.', speedMult: 1.0, hpMult: 2.5, countMult: 0.5 }
         };
+
+        // Wave Challenges
+        this.WAVE_CHALLENGES = [
+            { id: 'FLAWLESS', label: 'Flawless', description: 'Take no damage this wave.' },
+            { id: 'SPEED_CLEAR', label: 'Speed Clear', description: 'Finish with >50% time remaining.' },
+            { id: 'PACIFIST_START', label: 'Slow Start', description: 'Don\'t shoot for first 5s (Bonus +100).' }, // A bit complex to track, sticking to simple ones first
+            { id: 'HUNTER', label: 'Bounty Hunter', description: 'Clear wave quickly.' } // Redundant with Speed Clear
+        ];
+        // refined list
+        this.CHALLENGES = [
+            { id: 'FLAWLESS', label: 'FLAWLESS', description: 'Take NO damage this wave.' },
+            { id: 'SPEED', label: 'SPEED RUN', description: 'Finish with > 15s remaining.' },
+            { id: 'SURVIVOR', label: 'SURVIVOR', description: 'End wave with > 90% HP.' }
+        ];
     }
 
     startWave() {
         this.waveActive = true;
         this.timer = this.waveTime;
+
+        // Reset / Pick Challenge
+        this.currentChallenge = null;
+        this.playerHpAtWaveStart = this.game.player ? this.game.player.hp : 100;
+        
+        // 40% chance for a challenge on waves > 2
+        if (this.wave > 2 && Math.random() < 0.4) {
+            this.currentChallenge = this.CHALLENGES[Math.floor(Math.random() * this.CHALLENGES.length)];
+            console.log(`Wave Challenge: ${this.currentChallenge.label}`);
+        }
 
         // Select Wave Modifier (every 3rd non-boss wave)
         this.waveModifier = null;
@@ -34,6 +58,9 @@ export class WaveManager {
             this.waveModifier = modifiers[Math.floor(Math.random() * modifiers.length)];
             console.log(`${this.waveModifier.name}!`);
         }
+        
+        this.currentModifierName = this.waveModifier ? this.waveModifier.name : null;
+        this.currentModifierDescription = this.waveModifier ? this.waveModifier.description : null;
 
         // Difficulty Scaling
         let baseEnemies = 5 + Math.floor(this.wave * 3);
@@ -200,12 +227,40 @@ export class WaveManager {
         this.waveActive = false;
         console.log('Wave Cleared!');
 
+        // Check Challenge Success
+        let challengeResult = { success: false, challenge: null };
+        if (this.currentChallenge) {
+            let success = false;
+            if (this.currentChallenge.id === 'FLAWLESS') {
+                // Simple check: HP shouldn't have dropped below start (ignoring heals for simplicity, or strictly no dmg taken?)
+                // Strict "No Damage" is hard to track without event hook, using HP comparison is "good enough" if they heal back up it counts as 'failed' if they dropped? 
+                // Actually "Take no damage" usually implies NO hit. 
+                // But for simplicity, let's check if current HP >= Start HP. 
+                // Better: Player class tracks "tookDamageThisWave" flag? 
+                // Let's stick to simple HP comparison for now: If end HP < start HP, failed. 
+                // Actually, let's assume Flawless means "Don't lose health net total" for now to be forgiving, 
+                // or use game.player.tookDamage flag if we added it.
+                // Let's check strictly HP >= Start HP for now.
+                success = this.game.player.hp >= this.playerHpAtWaveStart;
+            } else if (this.currentChallenge.id === 'SPEED') {
+                success = this.timer >= 15;
+            } else if (this.currentChallenge.id === 'SURVIVOR') {
+                success = this.game.player.hp >= (this.game.player.maxHp * 0.9);
+            }
+            
+            challengeResult = {
+                success: success,
+                challenge: this.currentChallenge
+            };
+            console.log(`Challenge ${this.currentChallenge.label}: ${success ? 'COMPLETE' : 'FAILED'}`);
+        }
+
         // Check if world is completed
         if (this.world && this.wave >= this.world.waves) {
             console.log('World Cleared!');
             this.game.onWorldClear();
         } else {
-            this.game.onWaveComplete();
+            this.game.onWaveComplete(challengeResult);
         }
     }
 }

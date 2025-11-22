@@ -17,6 +17,8 @@ export class Player extends Entity {
         this.fireTimer = 0;
         this.range = 400;
         this.damage = 10;
+        this.critChance = 5.0; // 5% base
+        this.goldMultiplier = 1.0;
 
         // Abilities
         this.hasFireAura = false;

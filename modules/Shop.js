@@ -174,6 +174,50 @@ export const Shop = {
             apply: (player) => { player.range += 250; }
         },
 
+        // --- CRITICAL HIT ---
+        {
+            id: 'crit_common',
+            name: 'Sharp Lens',
+            description: '+5% Crit Chance.',
+            rarity: 'COMMON',
+            icon: 'hud_crit',
+            apply: (player) => { player.critChance = (player.critChance || 0) + 5; }
+        },
+        {
+            id: 'crit_rare',
+            name: 'Targeting Sys',
+            description: '+10% Crit Chance.',
+            rarity: 'RARE',
+            icon: 'hud_crit',
+            apply: (player) => { player.critChance = (player.critChance || 0) + 10; }
+        },
+        {
+            id: 'crit_epic',
+            name: 'Assassin',
+            description: '+20% Crit Chance.',
+            rarity: 'EPIC',
+            icon: 'hud_crit',
+            apply: (player) => { player.critChance = (player.critChance || 0) + 20; }
+        },
+
+        // --- ECONOMY ---
+        {
+            id: 'greed_rare',
+            name: 'Lucky Coin',
+            description: '+20% Gold Gain.',
+            rarity: 'RARE',
+            icon: 'coin',
+            apply: (player) => { player.goldMultiplier = (player.goldMultiplier || 1.0) + 0.2; }
+        },
+        {
+            id: 'greed_epic',
+            name: 'Midas Touch',
+            description: '+50% Gold Gain.',
+            rarity: 'EPIC',
+            icon: 'coin',
+            apply: (player) => { player.goldMultiplier = (player.goldMultiplier || 1.0) + 0.5; }
+        },
+
         // --- SPECIALS ---
         {
             id: 'ricochet_rare',

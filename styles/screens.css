@@ -280,13 +280,14 @@ button:hover {
     0% {
         background-position: 0 0;
     }
+
     100% {
         background-position: 50px 50px;
     }
 }
 
 /* Ensure menu content is above background */
-#menu-layer > *:not(.menu-bg-grid) {
+#menu-layer>*:not(.menu-bg-grid) {
     position: relative;
     z-index: 1;
 }
@@ -352,11 +353,13 @@ button:hover {
     height: 24px;
     image-rendering: pixelated;
     flex-shrink: 0;
-    pointer-events: none; /* Don't block button clicks */
+    pointer-events: none;
+    /* Don't block button clicks */
 }
 
 .menu-btn span {
     flex: 1;
     text-align: center;
-    pointer-events: none; /* Don't block button clicks */
+    pointer-events: none;
+    /* Don't block button clicks */
 }
