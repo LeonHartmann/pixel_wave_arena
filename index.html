@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Wave Arena</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="crt-overlay"></div>
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- UI Layers -->
+        <div id="ui-layer">
+            <div id="hud-top">
+                <div class="hud-item">WAVE: <span id="wave-display">1</span></div>
+                <div class="hud-item">TIME: <span id="time-display">00:00</span></div>
+                <div class="hud-item">GOLD: <span id="gold-display">0</span></div>
+            </div>
+            <div id="hud-bottom">
+                <div class="hud-item">HP: <span id="hp-display">100/100</span></div>
+            </div>
+
+            <!-- In-Game Stats Panel -->
+            <div id="hud-stats">
+                <div class="hud-stats-title">STATS</div>
+                <div class="hud-stat-row">
+                    <span class="hud-stat-label">DMG</span>
+                    <span class="hud-stat-value" id="hud-damage">10</span>
+                </div>
+                <div class="hud-stat-row">
+                    <span class="hud-stat-label">ATK SPD</span>
+                    <span class="hud-stat-value" id="hud-firerate">2.0/s</span>
+                </div>
+                <div class="hud-stat-row">
+                    <span class="hud-stat-label">MAX HP</span>
+                    <span class="hud-stat-value" id="hud-maxhp">100</span>
+                </div>
+                <div class="hud-stat-row">
+                    <span class="hud-stat-label">REGEN</span>
+                    <span class="hud-stat-value" id="hud-regen">0/s</span>
+                </div>
+                <div class="hud-stat-row">
+                    <span class="hud-stat-label">SPEED</span>
+                    <span class="hud-stat-value" id="hud-speed">200</span>
+                </div>
+                <div class="hud-stat-row">
+                    <span class="hud-stat-label">RANGE</span>
+                    <span class="hud-stat-value" id="hud-range">400</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="username-layer" class="screen hidden">
+            <h2>ENTER USERNAME</h2>
+            <input type="text" id="username-input" maxlength="12" placeholder="PLAYER 1">
+            <button id="confirm-username-btn">CONFIRM</button>
+        </div>
+
+        <div id="menu-layer" class="screen active">
+            <h1>PIXEL WAVE ARENA</h1>
+            <div id="menu-stats">
+                <p>GOLD: <span id="menu-gold-display">0</span></p>
+                <p>HIGH SCORE: <span id="menu-highscore-display">0</span></p>
+            </div>
+            <div class="menu-buttons">
+                <button id="start-game-btn" class="menu-btn">START GAME</button>
+                <button id="armory-btn" class="menu-btn">ARMORY</button>
+                <button id="leaderboard-btn" class="menu-btn">LEADERBOARD</button>
+            </div>
+        </div>
+
+        <div id="armory-layer" class="screen hidden">
+            <h2>ARMORY</h2>
+            <p>GOLD: <span id="armory-gold-display">0</span></p>
+
+            <div id="armory-content">
+                <!-- Left Side: Character Preview & Stats -->
+                <div id="armory-character">
+                    <h3>YOUR CHARACTER</h3>
+                    <div id="character-preview">
+                        <canvas id="character-canvas" width="128" height="128"></canvas>
+                    </div>
+                    <div id="character-stats">
+                        <div class="stat-row">
+                            <span class="stat-label">DAMAGE:</span>
+                            <span class="stat-value" id="stat-damage">10</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">FIRE RATE:</span>
+                            <span class="stat-value" id="stat-firerate">2.0/s</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">MAX HP:</span>
+                            <span class="stat-value" id="stat-hp">100</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">REGEN:</span>
+                            <span class="stat-value" id="stat-regen">0.0/s</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">SPEED:</span>
+                            <span class="stat-value" id="stat-speed">200</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">GOLD BONUS:</span>
+                            <span class="stat-value" id="stat-gold">+0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Side: Upgrades -->
+                <div id="armory-right">
+                    <!-- Filter Menu -->
+                    <div id="armory-filter">
+                        <button class="menu-btn small" onclick="window.filterArmory('OFFENSE')">OFFENSE</button>
+                        <button class="menu-btn small" onclick="window.filterArmory('DEFENSE')">DEFENSE</button>
+                        <button class="menu-btn small" onclick="window.filterArmory('UTILITY')">UTILITY</button>
+                    </div>
+
+                    <div id="armory-upgrades">
+                        <!-- Upgrades generated by JS -->
+                    </div>
+                </div>
+            </div>
+            <button id="armory-back-btn" class="menu-btn small">BACK</button>
+        </div>
+
+        <div id="leaderboard-layer" class="screen hidden">
+            <h2>LEADERBOARD</h2>
+            <div id="leaderboard-list">
+                <!-- Scores generated by JS -->
+            </div>
+            <button id="leaderboard-back-btn" class="menu-btn small">BACK</button>
+        </div>
+
+        <div id="world-select-layer" class="screen hidden">
+            <h2>SELECT WORLD</h2>
+            <div id="world-cards" style="display:flex; gap:20px; flex-wrap:wrap; justify-content:center;">
+                <!-- Worlds generated by JS -->
+            </div>
+            <button id="world-back-btn" class="menu-btn small">BACK</button>
+        </div>
+
+        <div id="shop-layer" class="screen hidden">
+            <h2>WAVE CLEARED</h2>
+            <p>CHOOSE AN UPGRADE</p>
+            <div id="upgrade-cards">
+                <!-- Cards generated by JS -->
+            </div>
+            <div id="auto-select-container">
+                <label class="auto-select-label">
+                    <input type="checkbox" id="auto-select-checkbox">
+                    <span>AUTO-SELECT (RANDOM)</span>
+                </label>
+            </div>
+        </div>
+
+        <div id="gameover-layer" class="screen hidden">
+            <h2 class="red-text">GAME OVER</h2>
+            <p>WAVE REACHED: <span id="final-wave">0</span></p>
+            <p>GOLD EARNED: <span id="run-gold">0</span></p>
+            <button id="restart-btn">RETURN TO MENU</button>
+        </div>
+
+        <div id="pause-layer" class="screen hidden">
+            <h2>PAUSED</h2>
+            <div class="pause-menu">
+                <button id="resume-btn" class="menu-btn">RESUME</button>
+                <button id="quit-btn" class="menu-btn">QUIT TO MENU</button>
+            </div>
+            <p class="pause-hint">Press ESC to resume</p>
+        </div>
+    </div>
+    <script src="game.js" type="module"></script>
+</body>
+
+</html>

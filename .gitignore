@@ -1,0 +1,25 @@
+# Markdown files
+*.md
+
+# Gemini clipboard
+.gemini-clipboard
+
+# Assets folder
+assets/
+
+# Node modules (if using npm packages in the future)
+node_modules/
+
+# Data file (contains user data)
+data.json
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE/Editor folders
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
