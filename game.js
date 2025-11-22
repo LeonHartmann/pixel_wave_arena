@@ -549,6 +549,35 @@ function returnToMenu() {
 // Load Assets
 Assets.load().then(() => {
     console.log('Assets loaded');
+    uiManager.initHUDIcons(); // Initialize HUD icons with loaded sprites
+
+    // Initialize other UI icons
+    const usernameIcon = document.getElementById('username-id-icon');
+    if (usernameIcon) usernameIcon.src = Assets.icons.icon_id_card;
+
+    // Initialize menu icons
+    const menuGoldIcon = document.getElementById('menu-gold-icon');
+    const menuTokensIcon = document.getElementById('menu-tokens-icon');
+    const menuHighscoreIcon = document.getElementById('menu-highscore-icon');
+    const startBtnIcon = document.getElementById('start-btn-icon');
+    const storeBtnIcon = document.getElementById('store-btn-icon');
+    const characterBtnIcon = document.getElementById('character-btn-icon');
+    const leaderboardBtnIcon = document.getElementById('leaderboard-btn-icon');
+
+    if (menuGoldIcon) menuGoldIcon.src = Assets.icons.coin;
+    if (menuTokensIcon) menuTokensIcon.src = Assets.icons.menu_token;
+    if (menuHighscoreIcon) menuHighscoreIcon.src = Assets.icons.menu_highscore;
+    if (startBtnIcon) startBtnIcon.src = Assets.icons.menu_start;
+    if (storeBtnIcon) storeBtnIcon.src = Assets.icons.menu_store;
+    if (characterBtnIcon) characterBtnIcon.src = Assets.icons.menu_character;
+    if (leaderboardBtnIcon) leaderboardBtnIcon.src = Assets.icons.menu_leaderboard;
+
+    // Initialize pause and game over icons
+    const pauseIcon = document.getElementById('pause-icon');
+    const gameoverIcon = document.getElementById('gameover-skull-icon');
+    if (pauseIcon) pauseIcon.src = Assets.icons.icon_pause;
+    if (gameoverIcon) gameoverIcon.src = Assets.icons.icon_skull;
+
     initGame();
 });
 

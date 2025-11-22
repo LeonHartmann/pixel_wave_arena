@@ -8,6 +8,15 @@
     --gold-color: #ffd700;
     --scanline-color: rgba(0, 0, 0, 0.5);
     --font-main: 'Press Start 2P', cursive;
+
+    /* Unified button/border system */
+    --pixel-border: 2px;
+    --pixel-border-thick: 3px;
+    --shadow-offset: 3px;
+    --btn-shadow: rgba(0, 0, 0, 0.5);
+    --btn-highlight: rgba(255, 255, 255, 0.2);
+    --btn-bg: rgba(0, 0, 0, 0.3);
+    --btn-bg-hover: rgba(15, 255, 15, 0.15);
 }
 
 * {
@@ -44,4 +53,222 @@ canvas {
     width: 100%;
     height: 100%;
     image-rendering: pixelated; /* Critical for pixel art look */
+}
+
+/* ============================================
+   UNIFIED BUTTON SYSTEM
+   ============================================ */
+
+.pixel-btn {
+    /* Core structure */
+    padding: 12px 24px;
+    font-family: var(--font-main);
+    font-size: 12px;
+    cursor: pointer;
+
+    /* Pixel-perfect borders */
+    border: var(--pixel-border-thick) solid var(--accent-color);
+    background: var(--btn-bg);
+    color: var(--text-color);
+
+    /* Inner highlight effect */
+    box-shadow:
+        inset 1px 1px 0 var(--btn-highlight),
+        var(--shadow-offset) var(--shadow-offset) 0 var(--btn-shadow);
+
+    /* Remove default styles */
+    outline: none;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+
+    /* Smooth transitions */
+    transition: all 0.15s ease;
+}
+
+/* Ensure nested elements don't block button clicks */
+.pixel-btn img,
+.pixel-btn span,
+.pixel-btn div {
+    pointer-events: none;
+}
+
+.pixel-btn:hover {
+    background: var(--btn-bg-hover);
+    box-shadow:
+        inset 1px 1px 0 var(--btn-highlight),
+        0 0 12px rgba(15, 255, 15, 0.5),
+        var(--shadow-offset) var(--shadow-offset) 0 var(--btn-shadow);
+    transform: translateY(-1px);
+}
+
+.pixel-btn:active {
+    transform: translateY(1px);
+    box-shadow:
+        inset 1px 1px 0 var(--btn-highlight),
+        1px 1px 0 var(--btn-shadow);
+}
+
+.pixel-btn.small {
+    padding: 8px 16px;
+    font-size: 10px;
+}
+
+.pixel-btn.large {
+    padding: 16px 32px;
+    font-size: 14px;
+}
+
+/* Danger variant */
+.pixel-btn.danger {
+    border-color: var(--danger-color);
+    background: rgba(255, 0, 0, 0.1);
+}
+
+.pixel-btn.danger:hover {
+    background: rgba(255, 0, 0, 0.2);
+    box-shadow:
+        inset 1px 1px 0 var(--btn-highlight),
+        0 0 12px rgba(255, 0, 0, 0.5),
+        var(--shadow-offset) var(--shadow-offset) 0 var(--btn-shadow);
+}
+
+/* Gold variant */
+.pixel-btn.gold {
+    border-color: var(--gold-color);
+    background: rgba(255, 215, 0, 0.1);
+}
+
+.pixel-btn.gold:hover {
+    background: rgba(255, 215, 0, 0.2);
+    box-shadow:
+        inset 1px 1px 0 var(--btn-highlight),
+        0 0 12px rgba(255, 215, 0, 0.5),
+        var(--shadow-offset) var(--shadow-offset) 0 var(--btn-shadow);
+}
+
+/* ============================================
+   INPUT NORMALIZATION
+   ============================================ */
+
+input[type="text"],
+input[type="number"],
+textarea {
+    /* Remove browser defaults */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: 0;
+    box-shadow: none;
+    outline: none;
+
+    /* Pixel-perfect styling */
+    font-family: var(--font-main);
+    font-size: 12px;
+    color: var(--text-color);
+    background: rgba(0, 0, 0, 0.5);
+    border: var(--pixel-border-thick) solid #666;
+    padding: 10px 12px;
+
+    /* Box shadow for depth */
+    box-shadow: inset 2px 2px 0 rgba(0, 0, 0, 0.3);
+
+    transition: border-color 0.2s;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+textarea:focus {
+    border-color: var(--accent-color);
+    box-shadow:
+        inset 2px 2px 0 rgba(0, 0, 0, 0.3),
+        0 0 8px rgba(15, 255, 15, 0.3);
+}
+
+input[type="text"]:disabled,
+input[type="number"]:disabled,
+textarea:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ============================================
+   CHECKBOX NORMALIZATION
+   ============================================ */
+
+input[type="checkbox"] {
+    /* Remove default appearance */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
+    /* Custom pixel checkbox */
+    width: 20px;
+    height: 20px;
+    border: var(--pixel-border) solid #666;
+    background: rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    position: relative;
+    margin: 0;
+
+    /* Box shadow for depth */
+    box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.3);
+
+    transition: all 0.2s;
+}
+
+input[type="checkbox"]:hover {
+    border-color: var(--accent-color);
+}
+
+input[type="checkbox"]:checked {
+    background: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 2px;
+    width: 6px;
+    height: 10px;
+    border: solid #000;
+    border-width: 0 3px 3px 0;
+    transform: rotate(45deg);
+}
+
+input[type="checkbox"]:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ============================================
+   ICON UTILITIES
+   ============================================ */
+
+.pixel-icon {
+    image-rendering: pixelated;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.pixel-icon.small {
+    width: 16px;
+    height: 16px;
+}
+
+.pixel-icon.medium {
+    width: 32px;
+    height: 32px;
+}
+
+.pixel-icon.large {
+    width: 48px;
+    height: 48px;
+}
+
+.pixel-icon.xl {
+    width: 64px;
+    height: 64px;
 }

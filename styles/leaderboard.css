@@ -35,9 +35,12 @@
 }
 
 .no-scores-icon {
-    font-size: 64px;
+    width: 80px;
+    height: 80px;
+    image-rendering: pixelated;
     margin-bottom: 20px;
     opacity: 0.5;
+    filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.3));
 }
 
 .no-scores p {
@@ -55,7 +58,7 @@
     grid-template-columns: 60px 1fr 100px 80px;
     gap: 15px;
     align-items: center;
-    padding: 8px;
+    padding: 10px;
     margin-bottom: 4px;
     background: rgba(20, 20, 20, 0.8);
     border: 2px solid #333;
@@ -92,8 +95,10 @@
     justify-content: center;
 }
 
-.rank-medal {
-    font-size: 20px;
+.rank-medal-icon {
+    width: 40px;
+    height: 40px;
+    image-rendering: pixelated;
 }
 
 .rank-number {

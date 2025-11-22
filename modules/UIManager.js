@@ -39,6 +39,21 @@ export class UIManager {
             }
         };
 
+        this.hudIcons = {
+            wave: document.getElementById('wave-icon'),
+            time: document.getElementById('time-icon'),
+            gold: document.getElementById('gold-icon'),
+            hp: document.getElementById('hp-icon'),
+            stats: {
+                dmg: document.getElementById('damage-stat-icon'),
+                rate: document.getElementById('firerate-stat-icon'),
+                hp: document.getElementById('maxhp-stat-icon'),
+                regen: document.getElementById('regen-stat-icon'),
+                speed: document.getElementById('speed-stat-icon'),
+                range: document.getElementById('range-stat-icon')
+            }
+        };
+
         this.menuElements = {
             gold: document.getElementById('menu-gold-display'),
             tokens: document.getElementById('menu-tokens-display'),
@@ -60,14 +75,38 @@ export class UIManager {
             const row = document.createElement('div');
             row.className = 'hud-stat-row';
             row.innerHTML = `
+                <img class="hud-stat-icon" id="crit-stat-icon" alt="">
                 <span class="hud-stat-label">CRIT</span>
                 <span class="hud-stat-value" id="hud-crit">0%</span>
             `;
             statsContainer.appendChild(row);
             this.hudElements.stats.crit = document.getElementById('hud-crit');
+            this.hudIcons.stats.crit = document.getElementById('crit-stat-icon');
         } else {
             this.hudElements.stats.crit = document.getElementById('hud-crit');
+            this.hudIcons.stats.crit = document.getElementById('crit-stat-icon');
         }
+    }
+
+    initHUDIcons() {
+        // Initialize HUD icons with sprites from Assets
+        // This should be called after Assets.load() completes
+        if (!Assets.icons) return;
+
+        // Top bar icons
+        if (this.hudIcons.wave) this.hudIcons.wave.src = Assets.icons.hud_wave;
+        if (this.hudIcons.time) this.hudIcons.time.src = Assets.icons.hud_time;
+        if (this.hudIcons.gold) this.hudIcons.gold.src = Assets.icons.hud_gold;
+        if (this.hudIcons.hp) this.hudIcons.hp.src = Assets.icons.hud_health;
+
+        // Stats panel icons
+        if (this.hudIcons.stats.dmg) this.hudIcons.stats.dmg.src = Assets.icons.hud_damage;
+        if (this.hudIcons.stats.rate) this.hudIcons.stats.rate.src = Assets.icons.hud_firerate;
+        if (this.hudIcons.stats.hp) this.hudIcons.stats.hp.src = Assets.icons.hud_health;
+        if (this.hudIcons.stats.regen) this.hudIcons.stats.regen.src = Assets.icons.hud_regen;
+        if (this.hudIcons.stats.speed) this.hudIcons.stats.speed.src = Assets.icons.hud_speed;
+        if (this.hudIcons.stats.range) this.hudIcons.stats.range.src = Assets.icons.hud_range;
+        if (this.hudIcons.stats.crit) this.hudIcons.stats.crit.src = Assets.icons.hud_crit;
     }
 
     initGlobalEvents() {
@@ -142,7 +181,7 @@ export class UIManager {
         if (data.highScores.length === 0) {
             container.innerHTML = `
                 <div class="no-scores">
-                    <div class="no-scores-icon">🏆</div>
+                    <img src="${Assets.icons.leader_trophy}" class="no-scores-icon pixel-icon" alt="Trophy">
                     <p>NO RUNS YET</p>
                     <p class="no-scores-hint">COMPLETE A RUN TO APPEAR HERE</p>
                 </div>
@@ -154,11 +193,13 @@ export class UIManager {
             const row = document.createElement('div');
             row.className = `leaderboard-row rank-${i + 1}`;
 
-            let rankDisplay = i < 3 
-                ? ['🥇', '🥈', '🥉'][i] 
-                : `<span class="rank-number">#${i + 1}</span>`;
-
-            if (i < 3) rankDisplay = `<span class="rank-medal">${rankDisplay}</span>`;
+            let rankDisplay;
+            if (i < 3) {
+                const medalIcons = [Assets.icons.leader_gold, Assets.icons.leader_silver, Assets.icons.leader_bronze];
+                rankDisplay = `<img src="${medalIcons[i]}" class="rank-medal-icon pixel-icon" alt="Rank ${i + 1}">`;
+            } else {
+                rankDisplay = `<span class="rank-number">#${i + 1}</span>`;
+            }
 
             const date = new Date(score.date);
             const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });

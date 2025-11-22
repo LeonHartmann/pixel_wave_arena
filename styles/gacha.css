@@ -15,7 +15,9 @@
     font-family: 'Press Start 2P', cursive;
 }
 
-.hidden {
+/* Gacha-specific hidden state - scoped to avoid conflicts with global .hidden */
+#gacha-layer .gacha-hidden,
+#reveal-overlay .gacha-hidden {
     display: none !important;
 }
 

@@ -16,6 +16,7 @@
     z-index: 20;
 }
 
+#shop-layer h1,
 #shop-layer h2 {
     font-size: 48px;
     color: #f1c40f;
@@ -31,22 +32,32 @@
     opacity: 0.8;
 }
 
-#auto-select-container {
+/* Auto-select controls panel */
+.shop-controls {
     margin-top: 30px;
     padding: 15px 25px;
-    background: rgba(0, 0, 0, 0.5);
-    border: 2px solid #555;
-    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.6);
+    border: var(--pixel-border) solid #555;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .auto-select-label {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 11px;
     color: #aaa;
     user-select: none;
+    transition: color 0.2s;
+}
+
+.auto-select-label:hover {
+    color: var(--accent-color);
+}
+
+.auto-select-label input[type="checkbox"] {
+    margin: 0;
 }
 
 .auto-select-label:hover {

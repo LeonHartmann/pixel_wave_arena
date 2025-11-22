@@ -622,6 +622,419 @@ export const SpriteGenerator = {
             drawRect(20, 40, 6, 6, '#000');
         });
 
+        // --- HUD ICONS (Reuse existing + new ones) ---
+        // Most HUD icons reuse existing upgrade icons
+        icons.hud_damage = icons.damage;
+        icons.hud_firerate = icons.firerate;
+        icons.hud_health = icons.health;
+        icons.hud_regen = icons.regen;
+        icons.hud_speed = icons.speed;
+        icons.hud_range = icons.range;
+        icons.hud_gold = icons.coin;
+
+        icons.hud_crit = createIcon((ctx, drawRect) => {
+            // Critical hit star
+            drawRect(28, 8, 8, 48, '#e91e63'); // Vertical
+            drawRect(8, 28, 48, 8, '#e91e63'); // Horizontal
+            // Diagonals
+            drawRect(18, 18, 8, 8, '#ec407a');
+            drawRect(38, 18, 8, 8, '#ec407a');
+            drawRect(18, 38, 8, 8, '#ec407a');
+            drawRect(38, 38, 8, 8, '#ec407a');
+            // Center
+            drawRect(24, 24, 16, 16, '#f48fb1');
+        });
+
+        icons.hud_wave = createIcon((ctx, drawRect) => {
+            // Skull counter icon
+            drawRect(20, 20, 24, 20, '#c0392b'); // Skull
+            drawRect(24, 24, 6, 6, '#000'); // Eye L
+            drawRect(34, 24, 6, 6, '#000'); // Eye R
+            drawRect(26, 26, 2, 2, '#f00'); // Pupil
+            drawRect(36, 26, 2, 2, '#f00'); // Pupil
+            drawRect(26, 34, 12, 4, '#000'); // Mouth
+        });
+
+        icons.hud_time = createIcon((ctx, drawRect) => {
+            // Clock
+            ctx.strokeStyle = '#ecf0f1';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.arc(32, 32, 22, 0, Math.PI * 2);
+            ctx.stroke();
+            // Clock hands
+            drawRect(30, 32, 4, 4, '#2c3e50'); // Center
+            drawRect(30, 14, 4, 18, '#2c3e50'); // Hour hand (up)
+            drawRect(32, 18, 14, 4, '#2c3e50'); // Minute hand (right)
+        });
+
+        // --- LEADERBOARD ICONS ---
+        icons.leader_trophy = createIcon((ctx, drawRect) => {
+            // Large trophy
+            drawRect(22, 44, 20, 16, '#f1c40f'); // Base
+            drawRect(28, 38, 8, 8, '#f39c12'); // Stem
+            drawRect(18, 18, 28, 20, '#f1c40f'); // Cup
+            drawRect(14, 22, 8, 12, '#f39c12'); // Left handle
+            drawRect(42, 22, 8, 12, '#f39c12'); // Right handle
+            drawRect(20, 20, 24, 4, '#f39c12'); // Top rim
+            // Shine
+            drawRect(24, 24, 6, 6, '#fff');
+        });
+
+        icons.leader_gold = createIcon((ctx, drawRect) => {
+            // Gold medal
+            ctx.fillStyle = '#f1c40f';
+            ctx.beginPath();
+            ctx.arc(32, 36, 18, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#f39c12';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+            // Ribbon
+            drawRect(28, 10, 8, 20, '#e74c3c'); // Red ribbon
+            drawRect(24, 10, 4, 14, '#c0392b');
+            drawRect(36, 10, 4, 14, '#c0392b');
+            // Number 1
+            drawRect(28, 32, 8, 12, '#d35400');
+            drawRect(28, 30, 8, 4, '#d35400');
+        });
+
+        icons.leader_silver = createIcon((ctx, drawRect) => {
+            // Silver medal
+            ctx.fillStyle = '#bdc3c7';
+            ctx.beginPath();
+            ctx.arc(32, 36, 18, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#95a5a6';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+            // Ribbon
+            drawRect(28, 10, 8, 20, '#3498db'); // Blue ribbon
+            drawRect(24, 10, 4, 14, '#2980b9');
+            drawRect(36, 10, 4, 14, '#2980b9');
+            // Number 2
+            drawRect(26, 30, 12, 4, '#7f8c8d');
+            drawRect(34, 34, 4, 6, '#7f8c8d');
+            drawRect(26, 40, 12, 4, '#7f8c8d');
+        });
+
+        icons.leader_bronze = createIcon((ctx, drawRect) => {
+            // Bronze medal
+            ctx.fillStyle = '#cd7f32';
+            ctx.beginPath();
+            ctx.arc(32, 36, 18, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#a0522d';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+            // Ribbon
+            drawRect(28, 10, 8, 20, '#e67e22'); // Orange ribbon
+            drawRect(24, 10, 4, 14, '#d35400');
+            drawRect(36, 10, 4, 14, '#d35400');
+            // Number 3
+            drawRect(26, 30, 12, 4, '#8b4513');
+            drawRect(26, 38, 12, 4, '#8b4513');
+            drawRect(26, 46, 12, 4, '#8b4513');
+            drawRect(34, 34, 4, 4, '#8b4513');
+        });
+
+        icons.leader_rank = createIcon((ctx, drawRect) => {
+            // Generic rank badge (shield)
+            drawRect(16, 16, 32, 36, '#7f8c8d'); // Shield
+            drawRect(18, 18, 28, 32, '#95a5a6'); // Inner
+            drawRect(24, 42, 16, 10, '#7f8c8d'); // Point
+        });
+
+        // --- MENU ICONS ---
+        icons.menu_token = createIcon((ctx, drawRect) => {
+            // Ticket/Token
+            drawRect(10, 24, 44, 16, '#9b59b6'); // Ticket body
+            drawRect(12, 26, 40, 12, '#8e44ad'); // Inner
+            // Perforations
+            drawRect(8, 28, 4, 2, '#000');
+            drawRect(8, 32, 4, 2, '#000');
+            drawRect(8, 36, 4, 2, '#000');
+            drawRect(52, 28, 4, 2, '#000');
+            drawRect(52, 32, 4, 2, '#000');
+            drawRect(52, 36, 4, 2, '#000');
+            // Star
+            drawRect(28, 28, 8, 8, '#f1c40f');
+        });
+
+        icons.menu_highscore = createIcon((ctx, drawRect) => {
+            // Trophy (smaller version)
+            drawRect(24, 44, 16, 12, '#f1c40f'); // Base
+            drawRect(28, 38, 8, 8, '#f39c12'); // Stem
+            drawRect(20, 20, 24, 18, '#f1c40f'); // Cup
+            drawRect(16, 24, 8, 10, '#f39c12'); // Left handle
+            drawRect(40, 24, 8, 10, '#f39c12'); // Right handle
+        });
+
+        icons.menu_start = createIcon((ctx, drawRect) => {
+            // Crosshair
+            ctx.strokeStyle = '#2ecc71';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.arc(32, 32, 20, 0, Math.PI * 2);
+            ctx.stroke();
+            drawRect(30, 8, 4, 10, '#2ecc71'); // Top
+            drawRect(30, 46, 4, 10, '#2ecc71'); // Bottom
+            drawRect(8, 30, 10, 4, '#2ecc71'); // Left
+            drawRect(46, 30, 10, 4, '#2ecc71'); // Right
+            drawRect(28, 28, 8, 8, '#e74c3c'); // Center
+        });
+
+        icons.menu_store = icons.chest; // Reuse chest icon
+
+        icons.menu_character = createIcon((ctx, drawRect) => {
+            // Helmet/Head
+            drawRect(20, 20, 24, 28, '#27ae60'); // Helmet
+            drawRect(24, 26, 16, 8, '#f1c40f'); // Visor
+            drawRect(18, 28, 6, 12, '#27ae60'); // Ear L
+            drawRect(40, 28, 6, 12, '#27ae60'); // Ear R
+        });
+
+        icons.menu_leaderboard = createIcon((ctx, drawRect) => {
+            // Trophy (small)
+            drawRect(26, 44, 12, 10, '#f1c40f'); // Base
+            drawRect(28, 38, 8, 6, '#f39c12'); // Stem
+            drawRect(22, 22, 20, 16, '#f1c40f'); // Cup
+            drawRect(18, 26, 6, 8, '#f39c12'); // Handle L
+            drawRect(40, 26, 6, 8, '#f39c12'); // Handle R
+        });
+
+        // --- WORLD STATUS ICONS ---
+        icons.world_lock = createIcon((ctx, drawRect) => {
+            // Padlock
+            drawRect(20, 32, 24, 24, '#7f8c8d'); // Body
+            drawRect(22, 34, 20, 20, '#95a5a6'); // Inner
+            // Shackle
+            ctx.strokeStyle = '#7f8c8d';
+            ctx.lineWidth = 6;
+            ctx.beginPath();
+            ctx.arc(32, 32, 12, Math.PI, 0, false);
+            ctx.stroke();
+            // Keyhole
+            drawRect(30, 40, 4, 8, '#2c3e50');
+        });
+
+        icons.world_complete = createIcon((ctx, drawRect) => {
+            // Checkmark
+            drawRect(14, 28, 8, 12, '#2ecc71'); // Left part
+            drawRect(22, 36, 8, 4, '#2ecc71'); // Corner
+            drawRect(30, 20, 8, 16, '#2ecc71'); // Right part (taller)
+            drawRect(38, 12, 8, 8, '#2ecc71'); // Top
+        });
+
+        icons.world_available = createIcon((ctx, drawRect) => {
+            // Arrow pointing right
+            drawRect(12, 28, 24, 8, '#f1c40f'); // Arrow shaft
+            drawRect(32, 20, 8, 8, '#f1c40f'); // Arrow top
+            drawRect(32, 36, 8, 8, '#f1c40f'); // Arrow bottom
+            drawRect(40, 24, 8, 16, '#f1c40f'); // Arrow point
+        });
+
+        // --- CHARACTER SCREEN SLOT PLACEHOLDERS ---
+        icons.slot_weapon = createIcon((ctx, drawRect) => {
+            // Weapon outline
+            drawRect(28, 16, 8, 24, '#555'); // Blade outline
+            drawRect(20, 40, 24, 6, '#555'); // Guard outline
+            drawRect(30, 46, 4, 8, '#555'); // Hilt outline
+        });
+
+        icons.slot_skin = createIcon((ctx, drawRect) => {
+            // Character silhouette
+            drawRect(24, 16, 16, 16, '#555'); // Head
+            drawRect(20, 32, 24, 20, '#555'); // Body
+            drawRect(16, 36, 8, 16, '#555'); // Arm L
+            drawRect(40, 36, 8, 16, '#555'); // Arm R
+        });
+
+        icons.slot_effect = createIcon((ctx, drawRect) => {
+            // Sparkle/Star
+            drawRect(28, 12, 8, 40, '#555'); // Vertical
+            drawRect(12, 28, 40, 8, '#555'); // Horizontal
+            drawRect(20, 20, 8, 8, '#555'); // Diagonal TL
+            drawRect(36, 20, 8, 8, '#555'); // Diagonal TR
+            drawRect(20, 36, 8, 8, '#555'); // Diagonal BL
+            drawRect(36, 36, 8, 8, '#555'); // Diagonal BR
+        });
+
+        icons.slot_aura = createIcon((ctx, drawRect) => {
+            // Aura ring
+            ctx.strokeStyle = '#555';
+            ctx.lineWidth = 6;
+            ctx.beginPath();
+            ctx.arc(32, 32, 18, 0, Math.PI * 2);
+            ctx.stroke();
+            // Inner glow indicators
+            drawRect(30, 12, 4, 8, '#555');
+            drawRect(30, 44, 4, 8, '#555');
+            drawRect(12, 30, 8, 4, '#555');
+            drawRect(44, 30, 8, 4, '#555');
+        });
+
+        icons.slot_gem = createIcon((ctx, drawRect) => {
+            // Gem/Diamond shape
+            drawRect(28, 16, 8, 8, '#555'); // Top
+            drawRect(20, 24, 24, 12, '#555'); // Middle
+            drawRect(24, 36, 16, 8, '#555'); // Bottom wide
+            drawRect(28, 44, 8, 8, '#555'); // Point
+        });
+
+        // --- CHARACTER FILTER ICONS ---
+        icons.filter_all = createIcon((ctx, drawRect) => {
+            // Grid of items
+            drawRect(12, 12, 12, 12, '#2ecc71');
+            drawRect(28, 12, 12, 12, '#3498db');
+            drawRect(44, 12, 12, 12, '#f1c40f');
+            drawRect(12, 28, 12, 12, '#9b59b6');
+            drawRect(28, 28, 12, 12, '#e74c3c');
+            drawRect(44, 28, 12, 12, '#e67e22');
+        });
+
+        icons.filter_weapon = createIcon((ctx, drawRect) => {
+            // Weapon icon (smaller)
+            drawRect(26, 16, 12, 20, '#bdc3c7'); // Blade
+            drawRect(18, 36, 28, 6, '#f1c40f'); // Guard
+            drawRect(28, 42, 8, 10, '#8e44ad'); // Hilt
+        });
+
+        icons.filter_gem = createIcon((ctx, drawRect) => {
+            // Gem/Diamond
+            drawRect(28, 16, 8, 8, '#3498db'); // Top
+            drawRect(20, 24, 24, 12, '#3498db'); // Middle
+            drawRect(24, 36, 16, 8, '#3498db'); // Bottom
+            drawRect(28, 44, 8, 6, '#3498db'); // Point
+        });
+
+        icons.filter_skin = createIcon((ctx, drawRect) => {
+            // Armor/Shirt
+            drawRect(20, 20, 24, 28, '#27ae60'); // Body
+            drawRect(16, 24, 8, 16, '#27ae60'); // Sleeve L
+            drawRect(40, 24, 8, 16, '#27ae60'); // Sleeve R
+            drawRect(24, 24, 16, 12, '#2ecc71'); // Chest detail
+        });
+
+        icons.filter_kill = createIcon((ctx, drawRect) => {
+            // Explosion
+            drawRect(28, 28, 8, 8, '#f1c40f'); // Center
+            drawRect(20, 20, 4, 4, '#e74c3c'); // TL
+            drawRect(40, 20, 4, 4, '#e74c3c'); // TR
+            drawRect(20, 40, 4, 4, '#e74c3c'); // BL
+            drawRect(40, 40, 4, 4, '#e74c3c'); // BR
+            drawRect(30, 14, 4, 10, '#e67e22'); // Top spike
+            drawRect(30, 40, 4, 10, '#e67e22'); // Bottom spike
+            drawRect(14, 30, 10, 4, '#e67e22'); // Left spike
+            drawRect(40, 30, 10, 4, '#e67e22'); // Right spike
+        });
+
+        icons.filter_aura = createIcon((ctx, drawRect) => {
+            // Aura ring with particles
+            ctx.strokeStyle = '#9b59b6';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.arc(32, 32, 16, 0, Math.PI * 2);
+            ctx.stroke();
+            drawRect(30, 8, 4, 6, '#8e44ad');
+            drawRect(30, 50, 4, 6, '#8e44ad');
+            drawRect(8, 30, 6, 4, '#8e44ad');
+            drawRect(50, 30, 6, 4, '#8e44ad');
+        });
+
+        // --- SERVICE ICONS ---
+        icons.service_reforge = createIcon((ctx, drawRect) => {
+            // Hammer and Anvil
+            // Anvil
+            drawRect(16, 36, 32, 16, '#7f8c8d');
+            drawRect(20, 32, 24, 4, '#95a5a6');
+            // Hammer
+            drawRect(32, 12, 16, 8, '#95a5a6'); // Hammer head
+            drawRect(36, 20, 4, 16, '#8e44ad'); // Handle
+            // Sparks
+            drawRect(12, 28, 4, 4, '#f1c40f');
+            drawRect(48, 30, 4, 4, '#f1c40f');
+        });
+
+        icons.service_fusion = createIcon((ctx, drawRect) => {
+            // Two items merging
+            drawRect(8, 20, 16, 16, '#3498db'); // Left item
+            drawRect(40, 20, 16, 16, '#9b59b6'); // Right item
+            // Merge effect in center
+            drawRect(24, 24, 4, 8, '#f1c40f');
+            drawRect(28, 26, 4, 4, '#f1c40f');
+            drawRect(32, 24, 4, 8, '#f1c40f');
+            // Energy lines
+            drawRect(20, 28, 4, 2, '#f39c12');
+            drawRect(40, 28, 4, 2, '#f39c12');
+        });
+
+        icons.service_promote = createIcon((ctx, drawRect) => {
+            // Upward arrow with sparkles
+            drawRect(28, 20, 8, 24, '#2ecc71'); // Arrow shaft
+            drawRect(20, 20, 8, 8, '#2ecc71'); // Arrow left
+            drawRect(36, 20, 8, 8, '#2ecc71'); // Arrow right
+            drawRect(24, 12, 16, 8, '#2ecc71'); // Arrow tip
+            // Sparkles
+            drawRect(12, 16, 4, 4, '#f1c40f');
+            drawRect(48, 16, 4, 4, '#f1c40f');
+            drawRect(16, 36, 4, 4, '#f1c40f');
+            drawRect(44, 36, 4, 4, '#f1c40f');
+        });
+
+        // --- GENERAL UI ICONS ---
+        icons.icon_pause = createIcon((ctx, drawRect) => {
+            // Pause symbol (||)
+            drawRect(20, 16, 8, 32, '#ecf0f1');
+            drawRect(36, 16, 8, 32, '#ecf0f1');
+        });
+
+        icons.icon_skull = createIcon((ctx, drawRect) => {
+            // Skull for game over
+            drawRect(16, 16, 32, 28, '#c0392b'); // Skull
+            drawRect(22, 22, 8, 8, '#000'); // Eye L
+            drawRect(34, 22, 8, 8, '#000'); // Eye R
+            drawRect(24, 24, 4, 4, '#f00'); // Pupil
+            drawRect(36, 24, 4, 4, '#f00'); // Pupil
+            drawRect(24, 36, 16, 6, '#000'); // Mouth
+            drawRect(26, 36, 4, 6, '#fff'); // Tooth 1
+            drawRect(30, 36, 4, 6, '#fff'); // Tooth 2
+            drawRect(34, 36, 4, 6, '#fff'); // Tooth 3
+        });
+
+        icons.icon_upgrade = createIcon((ctx, drawRect) => {
+            // Generic upgrade arrow (up)
+            drawRect(28, 24, 8, 24, '#2ecc71'); // Shaft
+            drawRect(20, 24, 8, 8, '#2ecc71'); // Left
+            drawRect(36, 24, 8, 8, '#2ecc71'); // Right
+            drawRect(24, 16, 16, 8, '#2ecc71'); // Tip
+        });
+
+        icons.icon_lock = createIcon((ctx, drawRect) => {
+            // Small lock
+            drawRect(22, 32, 20, 20, '#7f8c8d'); // Body
+            // Shackle
+            ctx.strokeStyle = '#7f8c8d';
+            ctx.lineWidth = 5;
+            ctx.beginPath();
+            ctx.arc(32, 32, 10, Math.PI, 0, false);
+            ctx.stroke();
+            // Keyhole
+            drawRect(30, 38, 4, 6, '#2c3e50');
+        });
+
+        icons.icon_id_card = createIcon((ctx, drawRect) => {
+            // ID Card
+            drawRect(8, 20, 48, 28, '#ecf0f1'); // Card
+            drawRect(10, 22, 44, 24, '#bdc3c7'); // Inner
+            // Photo area
+            drawRect(12, 26, 16, 16, '#34495e');
+            // Text lines
+            drawRect(32, 28, 20, 3, '#7f8c8d');
+            drawRect(32, 34, 16, 3, '#7f8c8d');
+            drawRect(32, 40, 12, 3, '#7f8c8d');
+        });
+
         return icons;
     },
 

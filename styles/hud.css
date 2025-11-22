@@ -32,6 +32,17 @@
 .hud-item {
     color: #fff;
     font-size: 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.hud-icon {
+    width: 32px;
+    height: 32px;
+    image-rendering: pixelated;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 #hp-display {
@@ -67,17 +78,27 @@
 
 .hud-stat-row {
     display: flex;
-    justify-content: space-between;
-    width: 140px;
+    align-items: center;
+    gap: 6px;
+    width: 180px;
+}
+
+.hud-stat-icon {
+    width: 20px;
+    height: 20px;
+    image-rendering: pixelated;
+    flex-shrink: 0;
 }
 
 .hud-stat-label {
     color: #ccc;
+    flex: 1;
 }
 
 .hud-stat-value {
     color: #fff;
     text-align: right;
+    flex-shrink: 0;
 }
 
 #hud-damage { color: #f1c40f; }

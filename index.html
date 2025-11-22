@@ -30,38 +30,56 @@
         <!-- UI Layers -->
         <div id="ui-layer" class="hidden">
             <div id="hud-top">
-                <div class="hud-item">WAVE: <span id="wave-display">1</span></div>
-                <div class="hud-item">TIME: <span id="time-display">00:00</span></div>
-                <div class="hud-item">GOLD: <span id="gold-display">0</span></div>
+                <div class="hud-item">
+                    <img class="hud-icon" id="wave-icon" alt="">
+                    WAVE: <span id="wave-display">1</span>
+                </div>
+                <div class="hud-item">
+                    <img class="hud-icon" id="time-icon" alt="">
+                    TIME: <span id="time-display">00:00</span>
+                </div>
+                <div class="hud-item">
+                    <img class="hud-icon" id="gold-icon" alt="">
+                    GOLD: <span id="gold-display">0</span>
+                </div>
             </div>
             <div id="hud-bottom">
-                <div class="hud-item">HP: <span id="hp-display">100/100</span></div>
+                <div class="hud-item">
+                    <img class="hud-icon" id="hp-icon" alt="">
+                    HP: <span id="hp-display">100/100</span>
+                </div>
             </div>
 
             <!-- In-Game Stats Panel -->
             <div id="hud-stats">
                 <div class="hud-stats-title">STATS</div>
                 <div class="hud-stat-row">
+                    <img class="hud-stat-icon" id="damage-stat-icon" alt="">
                     <span class="hud-stat-label">DMG</span>
                     <span class="hud-stat-value" id="hud-damage">10</span>
                 </div>
                 <div class="hud-stat-row">
+                    <img class="hud-stat-icon" id="firerate-stat-icon" alt="">
                     <span class="hud-stat-label">ATK SPD</span>
                     <span class="hud-stat-value" id="hud-firerate">2.0/s</span>
                 </div>
                 <div class="hud-stat-row">
+                    <img class="hud-stat-icon" id="maxhp-stat-icon" alt="">
                     <span class="hud-stat-label">MAX HP</span>
                     <span class="hud-stat-value" id="hud-maxhp">100</span>
                 </div>
                 <div class="hud-stat-row">
+                    <img class="hud-stat-icon" id="regen-stat-icon" alt="">
                     <span class="hud-stat-label">REGEN</span>
                     <span class="hud-stat-value" id="hud-regen">0/s</span>
                 </div>
                 <div class="hud-stat-row">
+                    <img class="hud-stat-icon" id="speed-stat-icon" alt="">
                     <span class="hud-stat-label">SPEED</span>
                     <span class="hud-stat-value" id="hud-speed">200</span>
                 </div>
                 <div class="hud-stat-row">
+                    <img class="hud-stat-icon" id="range-stat-icon" alt="">
                     <span class="hud-stat-label">RANGE</span>
                     <span class="hud-stat-value" id="hud-range">400</span>
                 </div>
@@ -69,23 +87,51 @@
         </div>
 
         <div id="username-layer" class="screen active">
-            <h2>ENTER USERNAME</h2>
-            <input type="text" id="username-input" maxlength="12" placeholder="PLAYER 1">
-            <button id="confirm-username-btn">CONFIRM</button>
+            <div class="username-panel">
+                <img class="username-icon" id="username-id-icon" alt="">
+                <h2>ENTER USERNAME</h2>
+                <input type="text" id="username-input" maxlength="12" placeholder="PLAYER 1">
+                <button id="confirm-username-btn" class="pixel-btn">CONFIRM</button>
+            </div>
         </div>
 
         <div id="menu-layer" class="screen hidden">
+            <div class="menu-bg-grid"></div>
             <h1>PIXEL WAVE ARENA</h1>
             <div id="menu-stats">
-                <p>GOLD: <span id="menu-gold-display">0</span></p>
-                <p>TOKENS: <span id="menu-tokens-display">0</span></p>
-                <p>HIGH SCORE: <span id="menu-highscore-display">0</span></p>
+                <div class="menu-stat-item">
+                    <img class="menu-stat-icon" id="menu-gold-icon" alt="">
+                    <span class="menu-stat-label">GOLD:</span>
+                    <span class="menu-stat-value" id="menu-gold-display">0</span>
+                </div>
+                <div class="menu-stat-item">
+                    <img class="menu-stat-icon" id="menu-tokens-icon" alt="">
+                    <span class="menu-stat-label">TOKENS:</span>
+                    <span class="menu-stat-value" id="menu-tokens-display">0</span>
+                </div>
+                <div class="menu-stat-item">
+                    <img class="menu-stat-icon" id="menu-highscore-icon" alt="">
+                    <span class="menu-stat-label">HIGH SCORE:</span>
+                    <span class="menu-stat-value" id="menu-highscore-display">0</span>
+                </div>
             </div>
             <div class="menu-buttons">
-                <button id="start-game-btn" class="menu-btn">START GAME</button>
-                <button id="store-btn" class="menu-btn">STORE</button>
-                <button id="character-btn" class="menu-btn">CHARACTER</button>
-                <button id="leaderboard-btn" class="menu-btn">LEADERBOARD</button>
+                <button id="start-game-btn" class="menu-btn pixel-btn">
+                    <img class="menu-btn-icon" id="start-btn-icon" alt="">
+                    <span>START GAME</span>
+                </button>
+                <button id="store-btn" class="menu-btn pixel-btn">
+                    <img class="menu-btn-icon" id="store-btn-icon" alt="">
+                    <span>STORE</span>
+                </button>
+                <button id="character-btn" class="menu-btn pixel-btn">
+                    <img class="menu-btn-icon" id="character-btn-icon" alt="">
+                    <span>CHARACTER</span>
+                </button>
+                <button id="leaderboard-btn" class="menu-btn pixel-btn">
+                    <img class="menu-btn-icon" id="leaderboard-btn-icon" alt="">
+                    <span>LEADERBOARD</span>
+                </button>
             </div>
         </div>
 
@@ -288,17 +334,21 @@
 
         <!-- Game Over Screen -->
         <div id="gameover-layer" class="screen hidden">
-            <h1>GAME OVER</h1>
+            <div class="gameover-header">
+                <img class="gameover-icon" id="gameover-skull-icon" alt="">
+                <h1 class="red-text">WAVE FAILED</h1>
+            </div>
             <p>WAVE REACHED: <span id="final-wave">0</span></p>
             <p>GOLD COLLECTED: <span id="run-gold">0</span></p>
-            <button id="restart-btn" class="menu-btn">RETURN TO MENU</button>
+            <button id="restart-btn" class="menu-btn pixel-btn">RETURN TO MENU</button>
         </div>
 
         <div id="pause-layer" class="screen hidden">
+            <img class="pause-icon" id="pause-icon" alt="">
             <h2>PAUSED</h2>
             <div class="pause-menu">
-                <button id="resume-btn" class="menu-btn">RESUME</button>
-                <button id="quit-btn" class="menu-btn">QUIT TO MENU</button>
+                <button id="resume-btn" class="menu-btn pixel-btn">RESUME</button>
+                <button id="quit-btn" class="menu-btn pixel-btn">QUIT TO MENU</button>
             </div>
             <p class="pause-hint">Press ESC to resume</p>
         </div>
