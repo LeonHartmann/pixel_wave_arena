@@ -2,7 +2,7 @@ export const SpriteGenerator = {
     generate() {
         const canvas = document.createElement('canvas');
         canvas.width = 256;
-        canvas.height = 64; // Expanded to fit new sprites (using 2 rows now)
+        canvas.height = 128; // Expanded to fit player skins
         const ctx = canvas.getContext('2d');
 
         // Helper to draw pixel rects
@@ -11,7 +11,7 @@ export const SpriteGenerator = {
             ctx.fillRect(x, y, w, h);
         };
 
-        // 1. PLAYER (0, 0, 32, 32) - Green Space Marine
+        // 1. PLAYER (0, 0, 32, 32) - Green Space Marine (Default)
         // Base
         drawRect(0, 0, 32, 32, 'rgba(0,0,0,0)'); // Clear
         drawRect(8, 4, 16, 24, '#2ecc71'); // Body
@@ -132,6 +132,64 @@ export const SpriteGenerator = {
         // Trail particles
         drawRect(44, 58, 2, 2, '#8e44ad');
         drawRect(54, 58, 2, 2, '#8e44ad');
+
+        // === NEW PLAYER SKINS (Row 3: y=64) ===
+
+        // 12. NINJA (0, 64, 32, 32)
+        drawRect(0, 64, 32, 32, 'rgba(0,0,0,0)');
+        drawRect(8, 68, 16, 24, '#2c3e50'); // Dark Body
+        drawRect(10, 66, 12, 10, '#34495e'); // Hood
+        drawRect(12, 70, 8, 2, '#ecf0f1'); // Eyes slit
+        drawRect(4, 74, 6, 14, '#2c3e50'); // Arm L
+        drawRect(22, 74, 6, 14, '#2c3e50'); // Arm R
+        // Scarf/Sash
+        drawRect(10, 80, 12, 4, '#c0392b'); 
+        drawRect(6, 82, 4, 8, '#c0392b'); // Scarf tail
+        // Katana/Gun
+        drawRect(24, 78, 4, 16, '#bdc3c7'); // Blade
+        drawRect(22, 90, 8, 4, '#95a5a6'); // Handle
+
+        // 13. ROBOT (32, 64, 32, 32)
+        drawRect(32, 64, 32, 32, 'rgba(0,0,0,0)');
+        drawRect(40, 68, 16, 24, '#7f8c8d'); // Grey Body
+        drawRect(42, 66, 12, 10, '#95a5a6'); // Head
+        drawRect(44, 70, 2, 2, '#e74c3c'); // Eye L
+        drawRect(50, 70, 2, 2, '#e74c3c'); // Eye R
+        drawRect(36, 74, 6, 14, '#7f8c8d'); // Arm L
+        drawRect(54, 74, 6, 14, '#7f8c8d'); // Arm R
+        // Tech details
+        drawRect(44, 80, 8, 6, '#3498db'); // Chest core
+        drawRect(32, 68, 4, 10, '#95a5a6'); // Antenna L
+        drawRect(60, 68, 4, 10, '#95a5a6'); // Antenna R
+
+        // 14. KNIGHT (64, 64, 32, 32)
+        drawRect(64, 64, 32, 32, 'rgba(0,0,0,0)');
+        drawRect(72, 68, 16, 24, '#f1c40f'); // Gold Armor Body
+        drawRect(74, 66, 12, 10, '#f39c12'); // Helm
+        // Visor Cross
+        drawRect(78, 66, 4, 10, '#000');
+        drawRect(74, 70, 12, 2, '#000');
+        drawRect(68, 74, 6, 14, '#f1c40f'); // Arm L
+        drawRect(86, 74, 6, 14, '#f1c40f'); // Arm R
+        drawRect(72, 92, 6, 4, '#e67e22'); // Leg L
+        drawRect(82, 92, 6, 4, '#e67e22'); // Leg R
+        // Cape
+        drawRect(74, 74, 12, 18, '#c0392b'); 
+
+        // 15. VOIDWALKER (96, 64, 32, 32)
+        drawRect(96, 64, 32, 32, 'rgba(0,0,0,0)');
+        drawRect(104, 68, 16, 24, '#2c3e50'); // Dark Body
+        drawRect(106, 66, 12, 10, '#8e44ad'); // Hood
+        drawRect(108, 70, 2, 2, '#fff'); // Glowing Eye L
+        drawRect(114, 70, 2, 2, '#fff'); // Glowing Eye R
+        drawRect(100, 74, 6, 14, '#2c3e50'); // Arm L
+        drawRect(118, 74, 6, 14, '#2c3e50'); // Arm R
+        // Void Particles
+        drawRect(98, 66, 2, 2, '#9b59b6');
+        drawRect(124, 80, 2, 2, '#9b59b6');
+        drawRect(102, 90, 2, 2, '#9b59b6');
+        // Energy Weapon
+        drawRect(118, 82, 8, 4, '#9b59b6');
 
         return canvas;
     },
@@ -365,6 +423,203 @@ export const SpriteGenerator = {
             drawRect(28, 16, 8, 32, '#d35400'); // Vertical
             drawRect(20, 20, 24, 6, '#d35400'); // Top bar
             drawRect(20, 38, 24, 6, '#d35400'); // Bottom bar
+        });
+
+        // --- SPECIFIC CHESTS ---
+        icons.chest = createIcon((ctx, drawRect) => {
+            // Chest (Default/Fallback)
+            drawRect(8, 20, 48, 32, '#d35400'); 
+            drawRect(8, 12, 48, 8, '#e67e22'); 
+            drawRect(12, 12, 4, 40, '#95a5a6'); 
+            drawRect(48, 12, 4, 40, '#95a5a6'); 
+            drawRect(28, 24, 8, 8, '#f1c40f'); 
+        });
+
+        icons.chest_common = createIcon((ctx, drawRect) => {
+            // Basic Wooden Crate
+            drawRect(10, 18, 44, 34, '#8e44ad'); // Shadow
+            drawRect(8, 16, 48, 32, '#d35400'); // Wood Body
+            drawRect(8, 12, 48, 8, '#e67e22'); // Lid
+            // Iron bands
+            drawRect(12, 12, 6, 36, '#7f8c8d');
+            drawRect(46, 12, 6, 36, '#7f8c8d');
+            drawRect(28, 26, 8, 10, '#bdc3c7'); // Iron Lock
+        });
+
+        icons.chest_rare = createIcon((ctx, drawRect) => {
+            // Silver / Steel Crate
+            drawRect(10, 18, 44, 34, '#2c3e50'); // Shadow
+            drawRect(8, 16, 48, 32, '#95a5a6'); // Silver Body
+            drawRect(8, 12, 48, 8, '#bdc3c7'); // Lid
+            // Blue Neon bands
+            drawRect(12, 12, 6, 36, '#3498db');
+            drawRect(46, 12, 6, 36, '#3498db');
+            drawRect(28, 26, 8, 10, '#f1c40f'); // Gold Lock
+            // Glow
+            drawRect(14, 30, 4, 4, '#3498db');
+            drawRect(46, 30, 4, 4, '#3498db');
+        });
+
+        icons.chest_epic = createIcon((ctx, drawRect) => {
+            // Gold / Royal Crate
+            drawRect(10, 18, 44, 34, '#d35400'); // Shadow
+            drawRect(8, 16, 48, 32, '#f1c40f'); // Gold Body
+            drawRect(8, 12, 48, 8, '#f39c12'); // Lid
+            // Purple Gem bands
+            drawRect(12, 12, 6, 36, '#8e44ad');
+            drawRect(46, 12, 6, 36, '#8e44ad');
+            drawRect(28, 26, 8, 10, '#9b59b6'); // Gem Lock
+            // Sparkles
+            drawRect(10, 10, 4, 4, '#fff');
+            drawRect(50, 40, 4, 4, '#fff');
+        });
+
+        icons.chest_legendary = createIcon((ctx, drawRect) => {
+            // Void / Mythic Crate
+            drawRect(10, 18, 44, 34, '#000'); // Shadow
+            drawRect(8, 16, 48, 32, '#2c3e50'); // Dark Body
+            drawRect(8, 12, 48, 8, '#34495e'); // Lid
+            // Glowing Red/Magma bands
+            drawRect(12, 12, 6, 36, '#c0392b');
+            drawRect(46, 12, 6, 36, '#c0392b');
+            // Eye Lock
+            drawRect(26, 24, 12, 12, '#000'); 
+            drawRect(30, 28, 4, 4, '#e74c3c'); // Red Eye
+            // Runes
+            drawRect(16, 36, 4, 4, '#e74c3c');
+            drawRect(44, 36, 4, 4, '#e74c3c');
+            drawRect(30, 14, 4, 4, '#e74c3c');
+        });
+
+        // --- WEAPON SKINS ---
+        icons.w_plasma = createIcon((ctx, drawRect) => {
+            // Standard Plasma (Purple/Blue)
+            drawRect(10, 20, 44, 24, '#2c3e50'); // Body
+            drawRect(40, 24, 14, 8, '#3498db'); // Barrel
+            drawRect(14, 24, 12, 12, '#34495e'); // Grip area
+            drawRect(42, 26, 10, 4, '#ecf0f1'); // Shine
+        });
+        icons.w_golden = createIcon((ctx, drawRect) => {
+            // Golden Gun
+            drawRect(10, 20, 44, 24, '#f1c40f'); // Gold Body
+            drawRect(40, 24, 14, 8, '#f39c12'); // Barrel shade
+            drawRect(14, 24, 12, 12, '#d35400'); // Grip
+            drawRect(10, 20, 44, 4, '#f39c12'); // Top shade
+        });
+        icons.w_neon = createIcon((ctx, drawRect) => {
+            // Neon Tracer (Dark with bright lines)
+            drawRect(10, 20, 44, 24, '#111'); // Dark Body
+            drawRect(10, 30, 44, 4, '#0f0'); // Neon Line
+            drawRect(40, 24, 14, 8, '#0f0'); // Neon Tip
+        });
+        icons.w_pixel = createIcon((ctx, drawRect) => {
+            // Glitchy (Random colored blocks)
+            drawRect(10, 20, 44, 24, '#bdc3c7'); 
+            drawRect(14, 22, 4, 4, '#e74c3c'); // Red pixel
+            drawRect(24, 34, 4, 4, '#3498db'); // Blue pixel
+            drawRect(34, 26, 4, 4, '#2ecc71'); // Green pixel
+            drawRect(44, 30, 4, 4, '#f1c40f'); // Yellow pixel
+        });
+        icons.w_void = createIcon((ctx, drawRect) => {
+            // Void Beam (Dark purple/black)
+            drawRect(10, 20, 44, 24, '#2c3e50'); 
+            drawRect(12, 22, 40, 20, '#000'); // Inner void
+            drawRect(40, 24, 14, 8, '#8e44ad'); // Purple glow tip
+        });
+
+        // --- CHARACTER SKINS (Heads/Helmets) ---
+        icons.c_marine = createIcon((ctx, drawRect) => {
+            // Marine Helmet
+            drawRect(16, 16, 32, 32, '#27ae60'); 
+            drawRect(20, 24, 24, 8, '#f1c40f'); // Visor
+        });
+        icons.c_ninja = createIcon((ctx, drawRect) => {
+            // Ninja Hood
+            drawRect(16, 16, 32, 32, '#2c3e50');
+            drawRect(20, 24, 24, 6, '#ecf0f1'); // Eye slit
+            drawRect(32, 20, 20, 20, 'rgba(0,0,0,0.2)'); // Shade
+        });
+        icons.c_robot = createIcon((ctx, drawRect) => {
+            // Robot Head
+            drawRect(16, 16, 32, 32, '#95a5a6');
+            drawRect(22, 24, 8, 8, '#e74c3c'); // Eye L
+            drawRect(34, 24, 8, 8, '#e74c3c'); // Eye R
+            drawRect(14, 24, 4, 12, '#7f8c8d'); // Ear L
+            drawRect(46, 24, 4, 12, '#7f8c8d'); // Ear R
+        });
+        icons.c_knight = createIcon((ctx, drawRect) => {
+            // Knight Helm
+            drawRect(16, 16, 32, 32, '#f1c40f'); // Gold
+            drawRect(28, 16, 8, 32, '#d35400'); // Cross vertical
+            drawRect(16, 26, 32, 6, '#d35400'); // Cross horizontal
+        });
+        icons.c_voidwalker = createIcon((ctx, drawRect) => {
+            // Void Hood
+            drawRect(16, 16, 32, 32, '#4b0082');
+            drawRect(24, 24, 8, 8, '#fff'); // Glowing Eye L
+            drawRect(36, 24, 8, 8, '#fff'); // Glowing Eye R
+            drawRect(20, 40, 24, 8, '#000'); // Shadow mouth
+        });
+
+        // --- KILL EFFECTS ---
+        icons.k_pixel = createIcon((ctx, drawRect) => {
+            // Simple pixel burst
+            drawRect(28, 28, 8, 8, '#e74c3c');
+            drawRect(16, 16, 4, 4, '#c0392b');
+            drawRect(44, 16, 4, 4, '#c0392b');
+            drawRect(16, 44, 4, 4, '#c0392b');
+            drawRect(44, 44, 4, 4, '#c0392b');
+        });
+        icons.k_confetti = createIcon((ctx, drawRect) => {
+            // Multi-colored specks
+            drawRect(20, 20, 4, 8, '#e74c3c');
+            drawRect(40, 15, 8, 4, '#3498db');
+            drawRect(15, 40, 4, 4, '#2ecc71');
+            drawRect(45, 45, 6, 6, '#f1c40f');
+            drawRect(30, 30, 4, 4, '#9b59b6');
+        });
+        icons.k_gold = createIcon((ctx, drawRect) => {
+            // Coins flying
+            drawRect(24, 16, 6, 6, '#f1c40f');
+            drawRect(40, 24, 6, 6, '#f1c40f');
+            drawRect(20, 40, 6, 6, '#f1c40f');
+            drawRect(44, 36, 6, 6, '#f1c40f');
+        });
+        icons.k_blackhole = createIcon((ctx, drawRect) => {
+            // Swirl
+            ctx.fillStyle = '#000';
+            ctx.beginPath();
+            ctx.arc(32, 32, 16, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#8e44ad';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(32, 32, 22, 0, Math.PI * 2);
+            ctx.stroke();
+        });
+
+        // --- AURA EFFECTS ---
+        icons.a_sparkles = createIcon((ctx, drawRect) => {
+            // Stars
+            drawRect(30, 10, 4, 4, '#fff');
+            drawRect(10, 30, 4, 4, '#fff');
+            drawRect(50, 30, 4, 4, '#fff');
+            drawRect(30, 50, 4, 4, '#fff');
+            drawRect(28, 28, 8, 8, '#f1c40f'); // Center star
+        });
+        icons.a_fire = createIcon((ctx, drawRect) => {
+            // Fire ring (smaller version of fireaura icon essentially)
+            drawRect(28, 40, 8, 12, '#e74c3c');
+            drawRect(24, 32, 16, 12, '#e67e22');
+            drawRect(28, 24, 8, 12, '#f39c12');
+            drawRect(30, 16, 4, 8, '#f1c40f');
+        });
+        icons.a_void = createIcon((ctx, drawRect) => {
+            // Dark particles
+            drawRect(20, 20, 6, 6, '#4b0082');
+            drawRect(40, 40, 6, 6, '#4b0082');
+            drawRect(40, 20, 6, 6, '#000');
+            drawRect(20, 40, 6, 6, '#000');
         });
 
         return icons;

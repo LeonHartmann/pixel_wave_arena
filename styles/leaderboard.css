@@ -55,8 +55,8 @@
     grid-template-columns: 60px 1fr 100px 80px;
     gap: 15px;
     align-items: center;
-    padding: 15px;
-    margin-bottom: 10px;
+    padding: 8px;
+    margin-bottom: 4px;
     background: rgba(20, 20, 20, 0.8);
     border: 2px solid #333;
     border-left-width: 4px;
@@ -93,7 +93,7 @@
 }
 
 .rank-medal {
-    font-size: 32px;
+    font-size: 20px;
 }
 
 .rank-number {
@@ -123,7 +123,7 @@
 }
 
 .lb-wave-value {
-    font-size: 20px;
+    font-size: 14px;
     font-weight: bold;
     color: var(--accent-color);
     text-shadow: 2px 2px #000;

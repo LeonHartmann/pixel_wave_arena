@@ -2,6 +2,11 @@
 
 /* Shop Layer */
 #shop-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     background: rgba(0, 0, 0, 0.85);
     backdrop-filter: blur(10px);
     display: flex;
@@ -59,13 +64,17 @@
     text-shadow: 2px 2px #000;
 }
 
-#upgrade-cards {
+.cards-container, .shop-grid {
     display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 30px;
     perspective: 1000px;
+    max-width: 1000px; /* Limit width */
+    padding: 20px;
 }
 
-.upgrade-card {
+.upgrade-card, .crate-card {
     width: 240px;
     height: 340px;
     background: rgba(20, 20, 20, 0.95);
@@ -83,10 +92,79 @@
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
-.upgrade-card:hover {
+.upgrade-card:hover, .crate-card:hover {
     transform: translateY(-10px) scale(1.05);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
     border-color: #fff;
+}
+
+.crate-card.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.crate-card .crate-icon {
+    width: 96px;
+    height: 96px;
+    margin-bottom: 15px;
+    image-rendering: pixelated;
+    filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.5));
+}
+
+.crate-card .crate-name {
+    font-size: 14px;
+    margin-bottom: 10px;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    line-height: 1.4;
+    min-height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.crate-card .crate-desc {
+    font-size: 10px;
+    line-height: 1.5;
+    color: #ccc;
+    margin-bottom: auto;
+    padding: 0 5px;
+}
+
+.crate-card .crate-price {
+    position: absolute;
+    bottom: 15px;
+    font-size: 18px;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 1px;
+    background: #f1c40f;
+    color: #000;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Rarity Styles for Crates */
+.crate-card.COMMON {
+    border-color: #95a5a6;
+    box-shadow: 0 0 10px rgba(149, 165, 166, 0.2);
+}
+.crate-card.RARE {
+    border-color: #3498db;
+    box-shadow: 0 0 15px rgba(52, 152, 219, 0.3);
+}
+.crate-card.EPIC {
+    border-color: #9b59b6;
+    box-shadow: 0 0 20px rgba(155, 89, 182, 0.4);
+}
+.crate-card.LEGENDARY {
+    border-color: #f1c40f;
+    box-shadow: 0 0 25px rgba(241, 196, 15, 0.5);
+    animation: legendaryGlow 3s infinite alternate;
 }
 
 /* Rarity Styles for In-Game Shop */
@@ -112,8 +190,8 @@
 }
 
 .upgrade-card .pixel-icon {
-    width: 32px;
-    height: 32px;
+    width: 64px;
+    height: 64px;
     margin-bottom: 15px;
     image-rendering: pixelated;
     filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.5));

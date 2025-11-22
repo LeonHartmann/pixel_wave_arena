@@ -1,5 +1,17 @@
 /* World Selection - Choose game world/theme */
 
+/* World Cards Container - Horizontal Layout */
+.world-cards-container {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    max-width: 1000px;
+    margin: 20px auto;
+}
+
 /* World Selection */
 .world-card {
     width: 200px;

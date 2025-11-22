@@ -2,7 +2,7 @@ import { Entity } from './Entity.js';
 import { Assets } from './Assets.js';
 
 export class Projectile extends Entity {
-    constructor(x, y, targetX, targetY, damage, isFrost, isExplosive, isEnemy) {
+    constructor(x, y, targetX, targetY, damage, isFrost, isExplosive, isEnemy, skin) {
         // Color: Enemy=Orange, Explosive=Red, Frost=Blue, Normal=Yellow
         const color = isEnemy ? '#e67e22' : (isExplosive ? '#e74c3c' : (isFrost ? '#3498db' : '#ff0'));
         super(x, y, 8, color);
@@ -12,6 +12,7 @@ export class Projectile extends Entity {
         this.isFrost = isFrost;
         this.isExplosive = isExplosive;
         this.isEnemy = isEnemy;
+        this.skin = skin; // Weapon Skin ID
 
         // Calculate direction once
         const dx = targetX - x;
@@ -28,12 +29,23 @@ export class Projectile extends Entity {
 
         this.lifeTime = 2.0; // Seconds to live
         this.ricochetCount = 0;
+        this.trail = []; // For visual effects
     }
 
     update(dt) {
         this.x += this.vx * dt;
         this.y += this.vy * dt;
         this.lifeTime -= dt;
+
+        // Trail Logic for skins
+        if (this.skin && !this.isEnemy) {
+            this.trail.push({ x: this.x, y: this.y, life: 0.2 });
+            // Limit trail size
+            if (this.trail.length > 10) this.trail.shift();
+            // Decay trail
+            this.trail.forEach(t => t.life -= dt);
+            this.trail = this.trail.filter(t => t.life > 0);
+        }
 
         if (this.lifeTime <= 0) {
             this.markedForDeletion = true;
@@ -82,6 +94,78 @@ export class Projectile extends Entity {
                 ctx.arc(this.x, this.y, 6, 0, Math.PI * 2);
                 ctx.fill();
             } else {
+                // SKIN EFFECTS
+                if (this.skin === 'w_golden') {
+                    // Gold Trail
+                    ctx.save();
+                    ctx.lineWidth = 4;
+                    this.trail.forEach((t, i) => {
+                        ctx.strokeStyle = `rgba(241, 196, 15, ${t.life * 2})`;
+                        if (i > 0) {
+                            ctx.beginPath();
+                            ctx.moveTo(this.trail[i-1].x, this.trail[i-1].y);
+                            ctx.lineTo(t.x, t.y);
+                            ctx.stroke();
+                        }
+                    });
+                    ctx.restore();
+                    // Projectile
+                    ctx.fillStyle = '#f1c40f';
+                    ctx.fillRect(this.x - 6, this.y - 6, 12, 12);
+                    return;
+                }
+                else if (this.skin === 'w_void') {
+                    // Void Trail (Black/Purple)
+                    ctx.save();
+                    ctx.lineWidth = 6;
+                    this.trail.forEach((t, i) => {
+                        ctx.strokeStyle = `rgba(75, 0, 130, ${t.life * 3})`;
+                        if (i > 0) {
+                            ctx.beginPath();
+                            ctx.moveTo(this.trail[i-1].x, this.trail[i-1].y);
+                            ctx.lineTo(t.x, t.y);
+                            ctx.stroke();
+                        }
+                    });
+                    ctx.restore();
+                    // Projectile
+                    ctx.fillStyle = '#000';
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, 6, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.strokeStyle = '#8e44ad';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                    return;
+                }
+                else if (this.skin === 'w_pixel') {
+                    // Glitchy Rects
+                    ctx.fillStyle = Math.random() > 0.5 ? '#e74c3c' : '#3498db';
+                    ctx.fillRect(this.x - 6, this.y - 6, 12, 12);
+                    ctx.fillStyle = '#fff';
+                    ctx.fillRect(this.x - 2, this.y - 2, 4, 4);
+                    return;
+                }
+                else if (this.skin === 'w_neon') {
+                    // Neon Green Trail
+                    ctx.save();
+                    ctx.lineWidth = 2;
+                    ctx.shadowBlur = 10;
+                    ctx.shadowColor = '#0f0';
+                    ctx.strokeStyle = '#0f0';
+                    ctx.beginPath();
+                    if (this.trail.length > 0) ctx.moveTo(this.trail[0].x, this.trail[0].y);
+                    this.trail.forEach(t => ctx.lineTo(t.x, t.y));
+                    ctx.lineTo(this.x, this.y);
+                    ctx.stroke();
+                    ctx.restore();
+                    
+                    ctx.fillStyle = '#0f0';
+                    ctx.fillRect(this.x - 4, this.y - 4, 8, 8);
+                    return;
+                }
+
+                // Default
                 Assets.draw(ctx, Assets.BULLET, this.x, this.y, 16, 16);
             }
         } else {

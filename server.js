@@ -64,11 +64,20 @@ const server = http.createServer((req, res) => {
             return;
         }
 
-        const db = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
-        const userData = db[username] || null;
+        try {
+            const fileContent = fs.readFileSync(DATA_FILE, 'utf8');
+            const db = JSON.parse(fileContent);
+            const userData = db[username] || null;
 
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ data: userData }));
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ data: userData }));
+        } catch (e) {
+            console.error('Error loading data:', e);
+            // If file is corrupted or parse fails, return empty/null to prevent crash
+            // Optionally backup corrupted file here if needed, but for now just recover
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ data: null, error: 'Data corrupted, reset' }));
+        }
         return;
     }
 
