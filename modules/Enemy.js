@@ -63,6 +63,7 @@ export class Enemy extends Entity {
             this.xpValue = 18;
             this.teleportTimer = 3.0;
             this.teleportCooldown = 3.0;
+            this.teleportFlash = 0; // Visual effect timer
         }
 
         this.maxHp = this.hp;
@@ -175,6 +176,8 @@ export class Enemy extends Entity {
         } else if (this.type === 'TELEPORTER') {
             // Teleport toward player periodically
             this.teleportTimer -= dt;
+            if (this.teleportFlash > 0) this.teleportFlash -= dt;
+
             if (this.teleportTimer <= 0 && dist > 100) {
                 this.teleportTimer = this.teleportCooldown;
                 // Teleport 200-300px closer to player
@@ -187,6 +190,7 @@ export class Enemy extends Entity {
                 if (map && !map.checkCollision({ x: newX, y: newY, size: this.size })) {
                     this.x = newX;
                     this.y = newY;
+                    this.teleportFlash = 0.3; // Flash for 0.3 seconds
                 }
             }
         }
@@ -242,13 +246,22 @@ export class Enemy extends Entity {
         if (Assets.loaded) {
             // Draw Sprite at y - z
             let sprite = Assets.ENEMY;
+            let spriteSize = 32;
+
             if (this.type === 'SHOOTER') sprite = Assets.SHOOTER;
             if (this.type === 'TANK') sprite = Assets.TANK;
+            if (this.type === 'SWARM') {
+                sprite = Assets.SWARM;
+                spriteSize = 16; // Smaller sprite
+            }
+            if (this.type === 'HEALER') sprite = Assets.HEALER;
+            if (this.type === 'SPLITTER') sprite = Assets.SPLITTER;
+            if (this.type === 'TELEPORTER') sprite = Assets.TELEPORTER;
 
             if (this.type === 'BOSS') {
                 Assets.drawBoss(ctx, this.x - 32, (this.y - this.z) - 32, 64, 64);
             } else {
-                Assets.draw(ctx, sprite, this.x, this.y - this.z, 32, 32);
+                Assets.draw(ctx, sprite, this.x, this.y - this.z, spriteSize, spriteSize);
             }
         } else {
             super.draw(ctx);
@@ -281,6 +294,69 @@ export class Enemy extends Entity {
             ctx.fillRect(x - 1, y - 4, 2, 8); // Vertical
             ctx.fillRect(x - 4, y - 1, 8, 2); // Horizontal
             ctx.fillRect(x - 2, y - 2, 4, 4); // Center
+        }
+
+        // HEALER: Draw healing aura
+        if (this.type === 'HEALER') {
+            const time = Date.now() / 1000;
+            const pulseSize = this.healRadius + Math.sin(time * 3) * 10;
+
+            ctx.strokeStyle = 'rgba(241, 196, 15, 0.3)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, pulseSize, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Draw heal particles
+            for (let i = 0; i < 3; i++) {
+                const angle = (time + i * 2.1) * 2;
+                const dist = 30 + Math.sin(time * 2 + i) * 10;
+                const px = this.x + Math.cos(angle) * dist;
+                const py = this.y + Math.sin(angle) * dist;
+                ctx.fillStyle = 'rgba(241, 196, 15, 0.6)';
+                ctx.fillRect(px - 2, py - 2, 4, 4);
+            }
+        }
+
+        // TELEPORTER: Draw phase effect
+        if (this.type === 'TELEPORTER') {
+            const time = Date.now() / 1000;
+            const alpha = 0.3 + Math.sin(time * 5) * 0.2;
+
+            // Phasing outline
+            ctx.strokeStyle = `rgba(155, 89, 182, ${alpha})`;
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y - this.z, this.size / 2 + 5, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Trail particles
+            for (let i = 0; i < 4; i++) {
+                const offset = i * 8;
+                const particleAlpha = 0.4 - (i * 0.1);
+                ctx.fillStyle = `rgba(155, 89, 182, ${particleAlpha})`;
+                ctx.fillRect(this.x - 3 + Math.sin(time + i) * 5,
+                            this.y - this.z + offset, 3, 3);
+            }
+
+            // Teleport flash effect
+            if (this.teleportFlash > 0) {
+                const flashAlpha = this.teleportFlash / 0.3; // Fade from 1 to 0
+                ctx.fillStyle = `rgba(155, 89, 182, ${flashAlpha * 0.8})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y - this.z, this.size * 1.5, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Particle burst
+                for (let i = 0; i < 8; i++) {
+                    const angle = (Math.PI * 2 / 8) * i;
+                    const dist = 40 * (1 - flashAlpha);
+                    const px = this.x + Math.cos(angle) * dist;
+                    const py = this.y - this.z + Math.sin(angle) * dist;
+                    ctx.fillStyle = `rgba(155, 89, 182, ${flashAlpha})`;
+                    ctx.fillRect(px - 3, py - 3, 6, 6);
+                }
+            }
         }
     }
 }

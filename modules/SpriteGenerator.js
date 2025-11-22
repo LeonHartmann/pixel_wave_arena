@@ -2,7 +2,7 @@ export const SpriteGenerator = {
     generate() {
         const canvas = document.createElement('canvas');
         canvas.width = 256;
-        canvas.height = 64;
+        canvas.height = 64; // Expanded to fit new sprites (using 2 rows now)
         const ctx = canvas.getContext('2d');
 
         // Helper to draw pixel rects
@@ -81,9 +81,57 @@ export const SpriteGenerator = {
         drawRect(178, 20, 4, 10, '#7f8c8d'); // Tread L
         drawRect(202, 20, 4, 10, '#7f8c8d'); // Tread R
 
-        // 8. BOSS (0, 64, 64, 64) - Mega Skull (New Row)
-        // We need to resize canvas for Boss row if not enough space? 
-        // Actually, let's just put it at 0, 64 (Canvas height needs to be 128)
+        // 8. SWARM (208, 0, 16, 16) - Small Green Bug
+        drawRect(208, 0, 16, 16, 'rgba(0,0,0,0)');
+        drawRect(210, 4, 12, 8, '#27ae60'); // Body
+        drawRect(208, 6, 2, 4, '#2ecc71'); // Wing L
+        drawRect(222, 6, 2, 4, '#2ecc71'); // Wing R
+        drawRect(212, 6, 2, 2, '#000'); // Eye L
+        drawRect(218, 6, 2, 2, '#000'); // Eye R
+        drawRect(214, 10, 4, 2, '#f1c40f'); // Stinger
+
+        // 9. HEALER (224, 0, 32, 32) - Gold Support Unit
+        drawRect(224, 0, 32, 32, 'rgba(0,0,0,0)');
+        drawRect(232, 6, 16, 20, '#f39c12'); // Body
+        drawRect(234, 10, 12, 12, '#f1c40f'); // Core
+        // Cross symbol
+        drawRect(238, 12, 4, 8, '#fff'); // Vertical
+        drawRect(236, 14, 8, 4, '#fff'); // Horizontal
+        drawRect(228, 18, 4, 10, '#f39c12'); // Arm L
+        drawRect(248, 18, 4, 10, '#f39c12'); // Arm R
+        // Halo/healing aura indicator
+        drawRect(230, 4, 2, 2, '#fff');
+        drawRect(246, 4, 2, 2, '#fff');
+
+        // 10. SPLITTER (0, 32, 32, 32) - Orange Slime
+        drawRect(0, 32, 32, 32, 'rgba(0,0,0,0)');
+        drawRect(6, 38, 20, 16, '#e67e22'); // Body
+        drawRect(8, 36, 16, 4, '#d35400'); // Top blob
+        drawRect(10, 42, 4, 4, '#000'); // Eye L
+        drawRect(18, 42, 4, 4, '#000'); // Eye R
+        drawRect(11, 43, 2, 2, '#f39c12'); // Pupil L
+        drawRect(19, 43, 2, 2, '#f39c12'); // Pupil R
+        drawRect(12, 48, 8, 4, '#d35400'); // Mouth
+        // Drips
+        drawRect(8, 54, 2, 4, '#e67e22');
+        drawRect(22, 54, 2, 4, '#e67e22');
+
+        // 11. TELEPORTER (32, 32, 32, 32) - Purple Phantom
+        drawRect(32, 32, 32, 32, 'rgba(0,0,0,0)');
+        drawRect(40, 36, 16, 20, '#9b59b6'); // Body
+        drawRect(42, 38, 12, 16, '#8e44ad'); // Core
+        drawRect(44, 42, 4, 4, '#fff'); // Eye L glow
+        drawRect(52, 42, 4, 4, '#fff'); // Eye R glow
+        drawRect(46, 44, 2, 2, '#e74c3c'); // Pupil L
+        drawRect(54, 44, 2, 2, '#e74c3c'); // Pupil R
+        // Phasing effect (jagged edges)
+        drawRect(38, 40, 2, 2, '#9b59b6');
+        drawRect(60, 40, 2, 2, '#9b59b6');
+        drawRect(36, 48, 2, 2, '#9b59b6');
+        drawRect(62, 48, 2, 2, '#9b59b6');
+        // Trail particles
+        drawRect(44, 58, 2, 2, '#8e44ad');
+        drawRect(54, 58, 2, 2, '#8e44ad');
 
         return canvas;
     },

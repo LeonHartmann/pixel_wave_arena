@@ -12,6 +12,11 @@ export const Assets = {
     BULLET: { x: 128, y: 0, w: 16, h: 16 },
     SHOOTER: { x: 144, y: 0, w: 32, h: 32 }, // Added SHOOTER
     TANK: { x: 176, y: 0, w: 32, h: 32 },   // Added TANK
+    // New enemies
+    SWARM: { x: 208, y: 0, w: 16, h: 16 },      // Small fast bug
+    HEALER: { x: 224, y: 0, w: 32, h: 32 },     // Support unit
+    SPLITTER: { x: 0, y: 32, w: 32, h: 32 },    // Splits on death
+    TELEPORTER: { x: 32, y: 32, w: 32, h: 32 }, // Teleports
 
     async load() { // Changed to async function
         const sheet = SpriteGenerator.generate();
