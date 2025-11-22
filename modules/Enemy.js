@@ -3,8 +3,8 @@ import { Assets } from './Assets.js';
 
 export class Enemy extends Entity {
     constructor(x, y, type = 'CHASER') {
-        super(x, y, type === 'BOSS' ? 48 : 24, '#f00');
-        this.type = type; // CHASER, SHOOTER, TANK, BOSS
+        super(x, y, type === 'BOSS' ? 48 : (type === 'SWARM' ? 10 : 24), '#f00');
+        this.type = type; // CHASER, SHOOTER, TANK, BOSS, SWARM, HEALER, SPLITTER, TELEPORTER
 
         // Base Stats
         this.speed = 100;
@@ -32,6 +32,37 @@ export class Enemy extends Entity {
             this.xpValue = 500;
             this.size = 50;
             this.shootTimer = 1.5;
+            // Boss phase tracking
+            this.phaseThresholds = [0.7, 0.4, 0.1]; // Spawn minions at these HP %
+            this.phasesTriggered = [];
+            this.isEnraged = false; // Speed boost at 50% HP
+        } else if (this.type === 'SWARM') {
+            this.hp = 15;
+            this.speed = 150;
+            this.damage = 8;
+            this.xpValue = 8;
+            this.size = 10;
+        } else if (this.type === 'HEALER') {
+            this.hp = 40;
+            this.speed = 60;
+            this.damage = 5;
+            this.xpValue = 30;
+            this.healRadius = 200;
+            this.healRate = 4.0; // HP per second for nearby enemies
+            this.healTimer = 0;
+        } else if (this.type === 'SPLITTER') {
+            this.hp = 35;
+            this.speed = 90;
+            this.damage = 10;
+            this.xpValue = 20;
+            this.canSplit = true;
+        } else if (this.type === 'TELEPORTER') {
+            this.hp = 25;
+            this.speed = 100;
+            this.damage = 10;
+            this.xpValue = 18;
+            this.teleportTimer = 3.0;
+            this.teleportCooldown = 3.0;
         }
 
         this.maxHp = this.hp;
@@ -80,9 +111,83 @@ export class Enemy extends Entity {
                 }
             }
 
+            // Boss-specific phase mechanics
+            if (this.type === 'BOSS' && game) {
+                const hpPercent = this.hp / this.maxHp;
+
+                // Check for phase transitions (spawn minions)
+                this.phaseThresholds.forEach((threshold, index) => {
+                    if (hpPercent <= threshold && !this.phasesTriggered.includes(index)) {
+                        this.phasesTriggered.push(index);
+                        // Spawn 3 minions
+                        for (let i = 0; i < 3; i++) {
+                            const spawnAngle = Math.random() * Math.PI * 2;
+                            const spawnDist = 80 + Math.random() * 40;
+                            const spawnX = this.x + Math.cos(spawnAngle) * spawnDist;
+                            const spawnY = this.y + Math.sin(spawnAngle) * spawnDist;
+
+                            if (!map.checkCollision({ x: spawnX, y: spawnY, size: 20 })) {
+                                const minionType = Math.random() < 0.5 ? 'CHASER' : 'SHOOTER';
+                                const minion = new Enemy(spawnX, spawnY, minionType);
+                                // Minions inherit scaled stats from current wave
+                                minion.hp = Math.floor(minion.hp * (1 + game.waveManager.wave * 0.4) * Math.pow(1.06, game.waveManager.wave - 1));
+                                minion.maxHp = minion.hp;
+                                minion.damage = Math.floor(minion.damage * Math.pow(1.08, game.waveManager.wave - 1));
+                                game.enemies.push(minion);
+                            }
+                        }
+                    }
+                });
+
+                // Enrage at 50% HP (speed boost)
+                if (hpPercent <= 0.5 && !this.isEnraged) {
+                    this.isEnraged = true;
+                    this.baseSpeed = Math.floor(this.baseSpeed * 1.2);
+                    this.speed = this.baseSpeed;
+                }
+            }
+
             // Stop moving if in range (Shooter only, Boss keeps moving slowly)
             if (this.type === 'SHOOTER' && dist < this.range) {
                 shouldMove = false;
+            }
+        } else if (this.type === 'HEALER') {
+            // Heal nearby enemies
+            this.healTimer += dt;
+            if (this.healTimer >= 1.0 && game) {
+                this.healTimer = 0;
+                // Heal nearby enemies (20% HP regen per second in radius)
+                game.enemies.forEach(enemy => {
+                    if (enemy !== this && enemy.hp < enemy.maxHp) {
+                        const edx = enemy.x - this.x;
+                        const edy = enemy.y - this.y;
+                        const edist = Math.sqrt(edx * edx + edy * edy);
+                        if (edist < this.healRadius) {
+                            enemy.hp = Math.min(enemy.maxHp, enemy.hp + this.healRate);
+                        }
+                    }
+                });
+            }
+            // Healer tries to stay at medium range
+            if (dist < 150) {
+                shouldMove = false;
+            }
+        } else if (this.type === 'TELEPORTER') {
+            // Teleport toward player periodically
+            this.teleportTimer -= dt;
+            if (this.teleportTimer <= 0 && dist > 100) {
+                this.teleportTimer = this.teleportCooldown;
+                // Teleport 200-300px closer to player
+                const teleportDist = 200 + Math.random() * 100;
+                const angle = Math.atan2(dy, dx);
+                const newX = this.x + Math.cos(angle) * teleportDist;
+                const newY = this.y + Math.sin(angle) * teleportDist;
+
+                // Only teleport if not into a wall
+                if (map && !map.checkCollision({ x: newX, y: newY, size: this.size })) {
+                    this.x = newX;
+                    this.y = newY;
+                }
             }
         }
 

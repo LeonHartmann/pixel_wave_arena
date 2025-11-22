@@ -1,0 +1,189 @@
+/* Shop - Wave cleared upgrade selection screen */
+
+/* Shop Layer */
+#shop-layer {
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+}
+
+#shop-layer h2 {
+    font-size: 48px;
+    color: #f1c40f;
+    text-shadow: 4px 4px 0 #000;
+    margin-bottom: 10px;
+    animation: pulse 2s infinite;
+}
+
+#shop-layer p {
+    font-size: 18px;
+    color: #fff;
+    margin-bottom: 40px;
+    opacity: 0.8;
+}
+
+#auto-select-container {
+    margin-top: 30px;
+    padding: 15px 25px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid #555;
+    border-radius: 8px;
+}
+
+.auto-select-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 12px;
+    color: #aaa;
+    user-select: none;
+}
+
+.auto-select-label:hover {
+    color: var(--accent-color);
+}
+
+#auto-select-checkbox {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: var(--accent-color);
+}
+
+.auto-select-label span {
+    text-shadow: 2px 2px #000;
+}
+
+#upgrade-cards {
+    display: flex;
+    gap: 30px;
+    perspective: 1000px;
+}
+
+.upgrade-card {
+    width: 240px;
+    height: 340px;
+    background: rgba(20, 20, 20, 0.95);
+    border: 2px solid #444;
+    border-radius: 12px;
+    padding: 20px 15px 50px 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.upgrade-card:hover {
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+    border-color: #fff;
+}
+
+/* Rarity Styles for In-Game Shop */
+.upgrade-card.common {
+    border-color: #95a5a6;
+    box-shadow: 0 0 10px rgba(149, 165, 166, 0.2);
+}
+
+.upgrade-card.rare {
+    border-color: #3498db;
+    box-shadow: 0 0 15px rgba(52, 152, 219, 0.3);
+}
+
+.upgrade-card.epic {
+    border-color: #9b59b6;
+    box-shadow: 0 0 20px rgba(155, 89, 182, 0.4);
+}
+
+.upgrade-card.legendary {
+    border-color: #f1c40f;
+    box-shadow: 0 0 25px rgba(241, 196, 15, 0.5);
+    animation: legendaryGlow 3s infinite alternate;
+}
+
+.upgrade-card .pixel-icon {
+    width: 32px;
+    height: 32px;
+    margin-bottom: 15px;
+    image-rendering: pixelated;
+    filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.5));
+}
+
+.upgrade-card h3 {
+    font-size: 9px;
+    margin-bottom: 10px;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    line-height: 1.4;
+    min-height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.upgrade-card.common h3 {
+    color: #bdc3c7;
+}
+
+.upgrade-card.rare h3 {
+    color: #3498db;
+}
+
+.upgrade-card.epic h3 {
+    color: #9b59b6;
+}
+
+.upgrade-card.legendary h3 {
+    color: #f1c40f;
+}
+
+.upgrade-card p {
+    font-size: 7px;
+    line-height: 1.5;
+    color: #ccc;
+    margin-bottom: auto;
+    padding: 0 5px;
+}
+
+.upgrade-card .rarity-badge {
+    position: absolute;
+    bottom: 15px;
+    font-size: 10px;
+    padding: 6px 14px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 1px;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.upgrade-card.common .rarity-badge {
+    color: #bdc3c7;
+    background: rgba(189, 195, 199, 0.1);
+}
+
+.upgrade-card.rare .rarity-badge {
+    color: #3498db;
+    background: rgba(52, 152, 219, 0.1);
+}
+
+.upgrade-card.epic .rarity-badge {
+    color: #9b59b6;
+    background: rgba(155, 89, 182, 0.1);
+}
+
+.upgrade-card.legendary .rarity-badge {
+    color: #f1c40f;
+    background: rgba(241, 196, 15, 0.1);
+}

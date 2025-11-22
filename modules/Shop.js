@@ -250,18 +250,18 @@ export const Shop = {
         {
             id: 'fireaura_epic',
             name: 'Fire Aura',
-            description: 'Burn nearby enemies (5 DPS).',
+            description: 'Burn nearby enemies (25 DPS).',
             rarity: 'EPIC',
             icon: 'fireaura',
             apply: (player) => {
                 player.hasFireAura = true;
-                player.fireAuraDamage = (player.fireAuraDamage || 0) + 5;
+                player.fireAuraDamage = (player.fireAuraDamage || 0) + 25;
             }
         },
         {
             id: 'frost_rare',
             name: 'Frost Shot',
-            description: 'Slow enemies on hit.',
+            description: 'Slow enemies on hit. Slowed enemies deal -30% damage.',
             rarity: 'RARE',
             icon: 'frostshot',
             apply: (player) => { player.hasFrostShot = true; }
@@ -277,12 +277,12 @@ export const Shop = {
         {
             id: 'orbitals_epic',
             name: 'Orbitals',
-            description: 'Spawns 2 defensive shields.',
+            description: 'Spawns 2 defensive shields (60 DPS contact).',
             rarity: 'EPIC',
             icon: 'orbitals',
             apply: (player) => {
                 player.orbitalCount = (player.orbitalCount || 0) + 2;
-                player.orbitalDamage = 20;
+                player.orbitalDamage = 60;
             }
         }
     ],

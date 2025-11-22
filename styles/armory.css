@@ -1,0 +1,299 @@
+/* Armory - Permanent upgrade shop */
+
+/* Armory Layout */
+#armory-content {
+    display: flex;
+    gap: 30px;
+    max-width: 1200px;
+    width: 90%;
+    height: 60vh;
+}
+
+/* Character Preview Section */
+#armory-character {
+    width: 300px;
+    background: rgba(20, 20, 20, 0.9);
+    border: 2px solid #444;
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+#armory-character h3 {
+    font-size: 14px;
+    color: var(--accent-color);
+    text-shadow: 2px 2px #000;
+    margin: 0;
+}
+
+#character-preview {
+    width: 128px;
+    height: 128px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid #555;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+#character-canvas {
+    image-rendering: pixelated;
+}
+
+#character-stats {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 10px;
+    background: rgba(0, 0, 0, 0.4);
+    border-left: 3px solid var(--accent-color);
+    border-radius: 2px;
+}
+
+.stat-label {
+    font-size: 9px;
+    color: #aaa;
+    text-transform: uppercase;
+}
+
+.stat-value {
+    font-size: 10px;
+    color: var(--accent-color);
+    font-weight: bold;
+    text-shadow: 1px 1px #000;
+}
+
+/* Armory Right Side */
+#armory-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Filter Buttons */
+#armory-filter {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+#armory-filter button {
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid #555;
+    color: #888;
+    transition: all 0.2s ease;
+    text-shadow: none;
+}
+
+#armory-filter button:hover {
+    border-color: #fff;
+    color: #fff;
+}
+
+#armory-filter button.active-filter {
+    background: var(--accent-color);
+    color: #000;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 15px var(--accent-color);
+    font-weight: bold;
+    transform: scale(1.05);
+}
+
+/* Armory Grid */
+#armory-upgrades {
+    /* Scrollbar styling */
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent-color) #111;
+}
+
+#armory-upgrades::-webkit-scrollbar {
+    width: 8px;
+}
+
+#armory-upgrades::-webkit-scrollbar-track {
+    background: #111;
+}
+
+#armory-upgrades::-webkit-scrollbar-thumb {
+    background-color: var(--accent-color);
+    border-radius: 4px;
+}
+
+/* Armory Card */
+.armory-card {
+    background: linear-gradient(135deg, rgba(20, 20, 20, 0.9) 0%, rgba(40, 40, 40, 0.9) 100%);
+    border: 2px solid #444;
+    border-left-width: 6px; /* Accent bar on left */
+    border-radius: 4px;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer; /* Card is a button */
+}
+
+.armory-card:hover:not(.disabled) {
+    transform: translateX(5px);
+    background: linear-gradient(135deg, rgba(40, 40, 40, 0.95) 0%, rgba(60, 60, 60, 0.95) 100%);
+}
+
+/* Disabled State */
+.armory-card.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    filter: grayscale(0.8);
+}
+
+.armory-card.disabled:hover {
+    transform: none; /* No movement on hover if disabled */
+}
+
+/* Rarity Colors */
+.armory-card.common {
+    border-color: #bdc3c7;
+    border-left-color: #bdc3c7;
+}
+
+.armory-card.rare {
+    border-color: #3498db;
+    border-left-color: #3498db;
+}
+
+.armory-card.epic {
+    border-color: #9b59b6;
+    border-left-color: #9b59b6;
+}
+
+.armory-card.legendary {
+    border-color: #f1c40f;
+    border-left-color: #f1c40f;
+    box-shadow: 0 0 10px rgba(241, 196, 15, 0.1);
+}
+
+/* Card Content */
+.card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex: 1;
+}
+
+.card-header {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+}
+
+.card-title {
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+.armory-card.common .card-title {
+    color: #bdc3c7;
+}
+
+.armory-card.rare .card-title {
+    color: #3498db;
+}
+
+.armory-card.epic .card-title {
+    color: #9b59b6;
+}
+
+.armory-card.legendary .card-title {
+    color: #f1c40f;
+    text-shadow: 0 0 5px rgba(241, 196, 15, 0.5);
+}
+
+.card-level {
+    font-size: 10px;
+    color: #666;
+    font-family: sans-serif; /* Cleaner font for numbers */
+    font-weight: bold;
+    background: #111;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.card-desc {
+    font-size: 10px;
+    color: #aaa;
+    line-height: 1.4;
+}
+
+/* Price Display */
+.card-price {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--gold-color);
+    font-weight: bold;
+    font-size: 16px;
+    text-shadow: 2px 2px 0 #000;
+    min-width: 80px;
+    justify-content: flex-end;
+}
+
+.coin-icon {
+    width: 20px;
+    height: 20px;
+    filter: drop-shadow(2px 2px 0 #000);
+}
+
+.armory-buy-btn:hover:not(:disabled) {
+    background: var(--accent-color);
+    color: #000;
+    border-color: var(--accent-color);
+    transform: scale(1.05);
+}
+
+.armory-buy-btn:hover:not(:disabled) .cost {
+    color: #000;
+}
+
+.armory-buy-btn:disabled {
+    border-color: #333;
+    color: #555;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.armory-buy-btn:disabled .cost {
+    color: #555;
+}
+
+/* Rarity specific button borders on hover/default */
+.armory-card.common .armory-buy-btn:not(:disabled) {
+    border-color: #bdc3c7;
+}
+
+.armory-card.rare .armory-buy-btn:not(:disabled) {
+    border-color: #3498db;
+}
+
+.armory-card.epic .armory-buy-btn:not(:disabled) {
+    border-color: #9b59b6;
+}
+
+.armory-card.legendary .armory-buy-btn:not(:disabled) {
+    border-color: #f1c40f;
+}

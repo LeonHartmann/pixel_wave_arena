@@ -119,7 +119,9 @@ function update(dt) {
 
             // Collision: Player vs Enemy (Contact Damage)
             if (!enemy.isJumping && checkCollision(player, enemy)) {
-                player.takeDamage(enemy.damage * dt);
+                // Frost Shots: Slowed enemies deal -30% damage
+                const damageReduction = enemy.slowTimer > 0 ? 0.7 : 1.0;
+                player.takeDamage(enemy.damage * dt * damageReduction);
 
                 // Thorns Logic
                 if (player.thornsDamage > 0) {
@@ -154,10 +156,10 @@ function update(dt) {
                             // Visual Explosion
                             explosions.push(new Explosion(p.x, p.y));
 
-                            // AoE Damage
+                            // AoE Damage (buffed: 150px radius, 80% damage)
                             enemies.forEach(nearby => {
                                 const dist = Math.hypot(nearby.x - p.x, nearby.y - p.y);
-                                if (dist < 100) nearby.hp -= p.damage * 0.5;
+                                if (dist < 150) nearby.hp -= p.damage * 0.8;
                             });
                         }
 
@@ -192,6 +194,27 @@ function update(dt) {
 
                 STATE.gold += goldAmount; // Update current run gold
                 Persistence.addGold(goldAmount); // Save to persistence
+
+                // SPLITTER: Spawn 2 smaller enemies on death
+                if (e.type === 'SPLITTER' && e.canSplit) {
+                    for (let j = 0; j < 2; j++) {
+                        const angle = Math.random() * Math.PI * 2;
+                        const dist = 40 + Math.random() * 20;
+                        const spawnX = e.x + Math.cos(angle) * dist;
+                        const spawnY = e.y + Math.sin(angle) * dist;
+
+                        if (!gameMap.checkCollision({ x: spawnX, y: spawnY, size: 10 })) {
+                            const miniEnemy = new Enemy(spawnX, spawnY, 'SWARM');
+                            // Mini enemies have half HP/damage of the parent
+                            miniEnemy.hp = Math.floor(e.maxHp * 0.3);
+                            miniEnemy.maxHp = miniEnemy.hp;
+                            miniEnemy.damage = Math.floor(e.damage * 0.5);
+                            miniEnemy.xpValue = Math.floor(e.xpValue * 0.2);
+                            enemies.push(miniEnemy);
+                        }
+                    }
+                }
+
                 enemies.splice(i, 1);
             }
         }

@@ -1,0 +1,136 @@
+/* Leaderboard - High score display */
+
+/* Leaderboard */
+#leaderboard-list {
+    width: 600px;
+    max-height: 500px;
+    overflow-y: auto;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid var(--accent-color);
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+#leaderboard-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+#leaderboard-list::-webkit-scrollbar-track {
+    background: #111;
+}
+
+#leaderboard-list::-webkit-scrollbar-thumb {
+    background-color: var(--accent-color);
+    border-radius: 4px;
+}
+
+.no-scores {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    color: #666;
+}
+
+.no-scores-icon {
+    font-size: 64px;
+    margin-bottom: 20px;
+    opacity: 0.5;
+}
+
+.no-scores p {
+    font-size: 12px;
+    margin: 5px 0;
+}
+
+.no-scores-hint {
+    font-size: 8px !important;
+    color: #555 !important;
+}
+
+.leaderboard-row {
+    display: grid;
+    grid-template-columns: 60px 1fr 100px 80px;
+    gap: 15px;
+    align-items: center;
+    padding: 15px;
+    margin-bottom: 10px;
+    background: rgba(20, 20, 20, 0.8);
+    border: 2px solid #333;
+    border-left-width: 4px;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.leaderboard-row:hover {
+    background: rgba(40, 40, 40, 0.9);
+    border-color: var(--accent-color);
+    transform: translateX(5px);
+}
+
+/* Top 3 special styling */
+.leaderboard-row.rank-1 {
+    border-left-color: #f1c40f;
+    background: linear-gradient(90deg, rgba(241, 196, 15, 0.1) 0%, rgba(20, 20, 20, 0.8) 100%);
+}
+
+.leaderboard-row.rank-2 {
+    border-left-color: #bdc3c7;
+    background: linear-gradient(90deg, rgba(189, 195, 199, 0.1) 0%, rgba(20, 20, 20, 0.8) 100%);
+}
+
+.leaderboard-row.rank-3 {
+    border-left-color: #e67e22;
+    background: linear-gradient(90deg, rgba(230, 126, 34, 0.1) 0%, rgba(20, 20, 20, 0.8) 100%);
+}
+
+.lb-rank {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rank-medal {
+    font-size: 32px;
+}
+
+.rank-number {
+    font-size: 16px;
+    font-weight: bold;
+    color: #666;
+}
+
+.lb-player {
+    font-size: 12px;
+    font-weight: bold;
+    color: var(--accent-color);
+    text-transform: uppercase;
+    text-shadow: 2px 2px #000;
+}
+
+.lb-wave {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.lb-wave-label {
+    font-size: 7px;
+    color: #666;
+}
+
+.lb-wave-value {
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--accent-color);
+    text-shadow: 2px 2px #000;
+}
+
+.lb-date {
+    font-size: 9px;
+    color: #888;
+    text-align: right;
+}
