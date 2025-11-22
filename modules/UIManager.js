@@ -1,6 +1,5 @@
 import { Assets } from './Assets.js';
 import { Persistence } from './Persistence.js';
-import { PERM_UPGRADES } from './upgrades.js';
 import { WORLDS } from './WorldConfig.js';
 import { Shop } from './Shop.js';
 
@@ -18,7 +17,7 @@ export class UIManager {
             hud: document.getElementById('ui-layer'),
             worldSelect: document.getElementById('world-select-layer'),
             pause: document.getElementById('pause-layer'),
-            unifiedShop: document.getElementById('unified-shop-layer'),
+            store: document.getElementById('store-layer'),
             character: document.getElementById('character-layer'),
             gacha: document.getElementById('gacha-layer'),
             reveal: document.getElementById('reveal-overlay')
@@ -42,6 +41,7 @@ export class UIManager {
 
         this.menuElements = {
             gold: document.getElementById('menu-gold-display'),
+            tokens: document.getElementById('menu-tokens-display'),
             highScore: document.getElementById('menu-highscore-display')
         };
 
@@ -72,16 +72,9 @@ export class UIManager {
 
     initGlobalEvents() {
         // Back Buttons
-        document.getElementById('shop-back-btn').onclick = () => this.showScreen('menu');
         document.getElementById('character-back-btn').onclick = () => this.showScreen('menu');
         document.getElementById('leaderboard-back-btn').onclick = () => this.showScreen('menu');
         document.getElementById('world-back-btn').onclick = () => this.showScreen('menu');
-        
-        // Shop Tabs
-        const tabCrates = document.getElementById('tab-crates');
-        const tabUpgrades = document.getElementById('tab-upgrades');
-        if (tabCrates) tabCrates.onclick = () => this.openUnifiedShop('CRATES');
-        if (tabUpgrades) tabUpgrades.onclick = () => this.openUnifiedShop('UPGRADES');
     }
 
     showScreen(screenName) {
@@ -136,6 +129,7 @@ export class UIManager {
     updateMainMenu() {
         const data = Persistence.getData();
         if (this.menuElements.gold) this.menuElements.gold.innerText = data.gold;
+        if (this.menuElements.tokens) this.menuElements.tokens.innerText = data.shopTokens;
         const topScore = data.highScores[0] ? data.highScores[0].wave : 0;
         if (this.menuElements.highScore) this.menuElements.highScore.innerText = topScore;
     }
@@ -215,66 +209,6 @@ export class UIManager {
                 div.onclick = () => onSelectWorld(world.id);
             }
 
-            container.appendChild(div);
-        });
-    }
-
-    openUnifiedShop(tab, gachaInterface) {
-        this.showScreen('unifiedShop');
-        const content = document.getElementById('shop-content-area');
-        const data = Persistence.getData();
-        document.getElementById('shop-gold-display').innerText = data.gold;
-
-        document.getElementById('tab-crates').classList.toggle('active', tab === 'CRATES');
-        document.getElementById('tab-upgrades').classList.toggle('active', tab === 'UPGRADES');
-
-        content.innerHTML = '';
-
-        if (tab === 'CRATES') {
-            const grid = document.createElement('div');
-            grid.className = 'shop-grid';
-            if (gachaInterface) gachaInterface.renderCrateShop(grid);
-            content.appendChild(grid);
-        } else {
-            const grid = document.createElement('div');
-            grid.className = 'shop-grid';
-            this.renderUpgrades(grid);
-            content.appendChild(grid);
-        }
-    }
-
-    renderUpgrades(container) {
-        const data = Persistence.getData();
-        PERM_UPGRADES.forEach(up => {
-            const level = data.upgrades[up.id] || 0;
-            const cost = Math.floor(up.baseCost * Math.pow(up.scale, level));
-            const canAfford = data.gold >= cost;
-
-            const div = document.createElement('div');
-            div.className = `upgrade-card ${up.rarity.toLowerCase()} ${canAfford ? '' : 'disabled'}`;
-
-            div.innerHTML = `
-                <div class="card-info">
-                    <div class="card-header">
-                        <span class="card-title">${up.name}</span>
-                        <span class="card-level">LVL ${level}</span>
-                    </div>
-                    <div class="card-desc">${up.desc}</div>
-                </div>
-                <div class="card-price">
-                    ${cost}
-                    <img src="${Assets.icons.coin}" class="coin-icon" alt="G">
-                </div>
-            `;
-
-            if (canAfford) {
-                div.onclick = () => {
-                    if (Persistence.buyUpgrade(up.id, cost)) {
-                        this.openUnifiedShop('UPGRADES'); 
-                        document.getElementById('shop-gold-display').innerText = Persistence.getData().gold;
-                    }
-                };
-            }
             container.appendChild(div);
         });
     }

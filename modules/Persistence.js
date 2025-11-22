@@ -1,11 +1,13 @@
 const API_URL = 'http://localhost:3000/api';
 import { GachaSystem } from './GachaSystem.js';
 import { ITEMS } from './Items.js';
+import { StoreRankManager } from './StoreRankManager.js';
 
 export const Persistence = {
     data: {
         username: 'Guest',
         gold: 0,
+        shopTokens: 0, // New Store currency
         highScores: [],
         upgrades: {}, // Permanent upgrades
         inventory: { items: [] }, // Collected items
@@ -16,7 +18,21 @@ export const Persistence = {
             auraEffect: null,
             statGems: [null, null, null]
         },
-        unlockedWorlds: ['tech']
+        unlockedWorlds: ['tech'],
+        // Store System
+        storeRank: 1,
+        storeXP: 0,
+        storeUpgradePoints: 0,
+        storeUpgrades: {}, // { upgradeId: level }
+        rotatingOffers: {
+            lastRefresh: 0,
+            freeRefreshUsed: false,
+            currentOffers: []
+        },
+        services: {
+            rarityPromotionsUsed: 0,
+            lastResetDate: ''
+        }
     },
 
     async init(username) {
@@ -37,7 +53,16 @@ export const Persistence = {
                     // Ensure deep structures exist
                     if (!this.data.inventory) this.data.inventory = { items: [] };
                     if (!this.data.loadout) this.data.loadout = { weaponSkin: null, characterSkin: null, killEffect: null, auraEffect: null, statGems: [null, null, null] };
-                    
+
+                    // Ensure Store system fields exist (for migration from old saves)
+                    if (this.data.shopTokens === undefined) this.data.shopTokens = 0;
+                    if (this.data.storeRank === undefined) this.data.storeRank = 1;
+                    if (this.data.storeXP === undefined) this.data.storeXP = 0;
+                    if (this.data.storeUpgradePoints === undefined) this.data.storeUpgradePoints = 0;
+                    if (!this.data.storeUpgrades) this.data.storeUpgrades = {};
+                    if (!this.data.rotatingOffers) this.data.rotatingOffers = { lastRefresh: 0, freeRefreshUsed: false, currentOffers: [] };
+                    if (!this.data.services) this.data.services = { rarityPromotionsUsed: 0, lastResetDate: '' };
+
                     // --- MIGRATION LOGIC ---
                     this.migrateData();
                     
@@ -172,6 +197,62 @@ export const Persistence = {
         if (this.data.gold >= cost) {
             this.data.gold -= cost;
             this.data.upgrades[upgradeId] = (this.data.upgrades[upgradeId] || 0) + 1;
+            this.save();
+            return true;
+        }
+        return false;
+    },
+
+    // Store System Methods
+    addShopTokens(amount) {
+        this.data.shopTokens += amount;
+        // Shop Tokens also grant Store XP (1:1 ratio)
+        this.addStoreXP(amount);
+        this.save();
+    },
+
+    addStoreXP(amount) {
+        const oldRank = this.data.storeRank;
+        this.data.storeXP += amount;
+
+        // Check for rank up (will be handled by StoreRankManager when imported)
+        // For now, just store the XP
+        this.checkStoreRankUp(oldRank);
+    },
+
+    checkStoreRankUp(oldRank) {
+        // Use StoreRankManager to determine current rank based on XP
+        const newRank = StoreRankManager.getCurrentRank(this.data.storeXP);
+
+        if (newRank > oldRank) {
+            this.data.storeRank = newRank;
+
+            // Award upgrade points from rank config
+            const rankConfig = StoreRankManager.getRankConfig(newRank);
+            const pointsAwarded = rankConfig.upgradePoints;
+            this.data.storeUpgradePoints += pointsAwarded;
+
+            console.log(`Store Rank Up! ${rankConfig.name} (Rank ${newRank}) reached. ${pointsAwarded} upgrade points awarded.`);
+            console.log(`Unlocks: ${rankConfig.unlocks.map(u => u.name).join(', ') || 'None'}`);
+
+            // Dispatch event for UI to show notification
+            if (typeof window !== 'undefined') {
+                window.dispatchEvent(new CustomEvent('storeRankUp', {
+                    detail: {
+                        newRank,
+                        rankName: rankConfig.name,
+                        pointsAwarded,
+                        unlocks: rankConfig.unlocks
+                    }
+                }));
+            }
+        }
+    },
+
+    buyStoreUpgrade(upgradeId, pointCost) {
+        if (this.data.storeUpgradePoints >= pointCost) {
+            this.data.storeUpgradePoints -= pointCost;
+            this.data.storeUpgrades[upgradeId] = (this.data.storeUpgrades[upgradeId] || 0) + 1;
             this.save();
             return true;
         }

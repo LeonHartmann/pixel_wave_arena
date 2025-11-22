@@ -11,10 +11,10 @@
     <link rel="stylesheet" href="styles/screens.css">
     <link rel="stylesheet" href="styles/shop.css">
     <link rel="stylesheet" href="styles/gacha.css">
-    <link rel="stylesheet" href="styles/armory.css">
     <link rel="stylesheet" href="styles/leaderboard.css">
     <link rel="stylesheet" href="styles/world-select.css">
     <link rel="stylesheet" href="styles/character.css">
+    <link rel="stylesheet" href="styles/store.css">
     <link rel="stylesheet" href="styles/hud.css">
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -78,11 +78,12 @@
             <h1>PIXEL WAVE ARENA</h1>
             <div id="menu-stats">
                 <p>GOLD: <span id="menu-gold-display">0</span></p>
+                <p>TOKENS: <span id="menu-tokens-display">0</span></p>
                 <p>HIGH SCORE: <span id="menu-highscore-display">0</span></p>
             </div>
             <div class="menu-buttons">
                 <button id="start-game-btn" class="menu-btn">START GAME</button>
-                <button id="shop-btn" class="menu-btn">SHOP</button>
+                <button id="store-btn" class="menu-btn">STORE</button>
                 <button id="character-btn" class="menu-btn">CHARACTER</button>
                 <button id="leaderboard-btn" class="menu-btn">LEADERBOARD</button>
             </div>
@@ -103,20 +104,101 @@
             <button id="world-back-btn" class="menu-btn small">BACK</button>
         </div>
 
-        <!-- Unified Shop Layer -->
-        <div id="unified-shop-layer" class="screen hidden">
-            <div class="shop-header">
-                <h1>MARKETPLACE</h1>
-                <p>GOLD: <span id="shop-gold-display">0</span></p>
+        <!-- Store Layer -->
+        <div id="store-layer" class="screen hidden">
+            <div class="store-header">
+                <h1>STORE</h1>
+                <div class="store-currencies">
+                    <span class="currency-display">GOLD: <span id="store-gold-display">0</span></span>
+                    <span class="currency-display">TOKENS: <span id="store-tokens-display">0</span></span>
+                </div>
             </div>
-            <div class="shop-tabs">
-                <button id="tab-crates" class="tab-btn active">CRATES</button>
-                <button id="tab-upgrades" class="tab-btn">POWER-UPS</button>
+
+            <!-- Store Tabs -->
+            <div class="store-tabs">
+                <button id="store-tab-rank" class="tab-btn active">RANK & UPGRADES</button>
+                <button id="store-tab-shop" class="tab-btn">SHOP</button>
+                <button id="store-tab-services" class="tab-btn">SERVICES</button>
             </div>
-            <div id="shop-content-area" class="shop-content">
-                <!-- Injected Content -->
+
+            <!-- Tab Content Areas -->
+            <div id="store-content" class="store-content">
+                <!-- Rank & Upgrades Tab -->
+                <div id="store-rank-content" class="store-tab-content">
+                    <div class="store-rank-info">
+                        <h2 id="store-rank-title">RANK 1</h2>
+                        <p id="store-rank-name">Novice Merchant</p>
+                        <div class="rank-xp-bar">
+                            <div id="rank-xp-fill" class="xp-bar-fill" style="width: 0%"></div>
+                        </div>
+                        <p id="rank-xp-text">0 / 100 XP</p>
+                        <p class="upgrade-points">UPGRADE POINTS: <span id="upgrade-points-display">0</span></p>
+                    </div>
+
+                    <div class="upgrade-tree">
+                        <h3>UPGRADE TREE</h3>
+                        <div class="tree-branches">
+                            <div class="tree-branch">
+                                <h4>ECONOMY</h4>
+                                <div id="economy-nodes" class="tree-nodes"></div>
+                            </div>
+                            <div class="tree-branch">
+                                <h4>LOOT QUALITY</h4>
+                                <div id="loot-nodes" class="tree-nodes"></div>
+                            </div>
+                            <div class="tree-branch">
+                                <h4>SERVICES</h4>
+                                <div id="services-nodes" class="tree-nodes"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shop Tab -->
+                <div id="store-shop-content" class="store-tab-content hidden">
+                    <div class="shop-section">
+                        <h3>CRATES</h3>
+                        <div id="store-crates-grid" class="crates-grid"></div>
+                    </div>
+
+                    <div class="shop-section">
+                        <h3>ROTATING DEALS</h3>
+                        <div class="deals-refresh">
+                            <button id="refresh-deals-btn" class="action-btn">REFRESH DEALS</button>
+                            <p id="refresh-cost-text">Free refresh available</p>
+                        </div>
+                        <div id="rotating-deals-grid" class="deals-grid"></div>
+                    </div>
+                </div>
+
+                <!-- Services Tab -->
+                <div id="store-services-content" class="store-tab-content hidden">
+                    <div class="services-layout">
+                        <div class="service-panel">
+                            <h3>REFORGE</h3>
+                            <p class="service-desc">Re-roll stat gem stats within same rarity</p>
+                            <div id="reforge-info" class="service-info"></div>
+                            <div id="reforge-ui" class="service-ui"></div>
+                        </div>
+
+                        <div class="service-panel">
+                            <h3>FUSION</h3>
+                            <p class="service-desc">Combine 3 items into a stronger version</p>
+                            <div id="fusion-info" class="service-info"></div>
+                            <div id="fusion-ui" class="service-ui"></div>
+                        </div>
+
+                        <div class="service-panel">
+                            <h3>RARITY PROMOTION</h3>
+                            <p class="service-desc">Upgrade item rarity by one tier</p>
+                            <div id="promotion-info" class="service-info"></div>
+                            <div id="promotion-ui" class="service-ui"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <button id="shop-back-btn" class="menu-btn small">BACK</button>
+
+            <button id="store-back-btn" class="menu-btn small">BACK</button>
         </div>
 
         <!-- Character / Loadout Layer -->

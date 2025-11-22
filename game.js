@@ -8,12 +8,13 @@ import { WaveManager } from './modules/WaveManager.js';
 import { Persistence } from './modules/Persistence.js';
 import { Projectile } from './modules/Projectile.js';
 import { Explosion } from './modules/Explosion.js';
-import { PERM_UPGRADES } from './modules/upgrades.js';
 import { getWorldById, WORLDS } from './modules/WorldConfig.js';
 import { GachaInterface } from './modules/GachaInterface.js';
 import { FREE_CRATE_REWARDS, ITEMS } from './modules/Items.js';
 import { CharacterScreen } from './modules/CharacterScreen.js';
 import { UIManager } from './modules/UIManager.js';
+import { StoreUpgradeTree } from './modules/StoreUpgradeTree.js';
+import { StoreUI } from './modules/StoreUI.js';
 
 // Game Configuration
 const CONFIG = {
@@ -66,6 +67,7 @@ const uiManager = new UIManager({
 // Pass bound showScreen from uiManager
 const gachaInterface = new GachaInterface(uiManager.showScreen.bind(uiManager));
 const characterScreen = new CharacterScreen(uiManager.showScreen.bind(uiManager));
+const storeUI = new StoreUI(uiManager.showScreen.bind(uiManager), gachaInterface);
 
 // Input Handling for Game Over and Pause
 window.addEventListener('keydown', (e) => {
@@ -327,8 +329,9 @@ document.getElementById('start-game-btn').onclick = () => {
     uiManager.openWorldSelect((worldId) => startGame(worldId));
 };
 
-document.getElementById('shop-btn').onclick = () => {
-    uiManager.openUnifiedShop('CRATES', gachaInterface);
+document.getElementById('store-btn').onclick = () => {
+    uiManager.showScreen('store');
+    storeUI.open('rank');
 };
 
 document.getElementById('character-btn').onclick = () => {
@@ -369,23 +372,8 @@ function startGame(worldId) {
         gameMap = new GameMap();
         player = new Player(0, 0);
 
-        // Apply Upgrades
-        const data = Persistence.getData();
-        const u = data.upgrades;
-        PERM_UPGRADES.forEach(up => {
-            const level = u[up.id] || 0;
-            if (level > 0) {
-                const totalBonus = up.val * level;
-                if (up.stat === 'damage') player.damage += totalBonus;
-                if (up.stat === 'maxHp') player.maxHp += totalBonus;
-                if (up.stat === 'speed') player.speed += totalBonus;
-                if (up.stat === 'regen') player.regenRate += totalBonus;
-                if (up.stat === 'gold') STATE.goldMultiplier += totalBonus;
-                if (up.stat === 'fireRate') player.fireRateBonus += totalBonus;
-            }
-        });
-
         // Apply Loadout (Skins/Effects/Gems)
+        const data = Persistence.getData();
         if (data.loadout) {
             // Apply Gems
             if (data.loadout.statGems) {
@@ -479,10 +467,23 @@ function checkCrateReward(wave) {
 
 function gameOver() {
     STATE.current = 'GAMEOVER';
-    
-    // Save Progress
-    Persistence.addGold(STATE.gold);
+
+    // Save Progress with Run Dividend bonus
+    const runGoldBonus = StoreUpgradeTree.getRunGoldBonus();
+    const bonusGold = Math.floor(STATE.gold * runGoldBonus);
+    const totalGold = STATE.gold + bonusGold;
+
+    Persistence.addGold(totalGold);
     Persistence.addHighScore(STATE.wave, STATE.score);
+
+    if (bonusGold > 0) {
+        console.log(`Run Dividend: +${bonusGold} bonus gold (${(runGoldBonus * 100).toFixed(0)}%)`);
+    }
+
+    // Award Shop Tokens based on wave reached
+    const tokensEarned = Math.floor(STATE.wave * 2);
+    Persistence.addShopTokens(tokensEarned);
+    console.log(`Run complete! Wave ${STATE.wave}: +${tokensEarned} Shop Tokens`);
 
     uiManager.showGameOver(STATE, false, gachaInterface);
 
@@ -498,8 +499,23 @@ function gameOver() {
 
 function victory() {
     STATE.current = 'GAMEOVER';
-    Persistence.addGold(STATE.gold);
+
+    // Save Progress with Run Dividend bonus
+    const runGoldBonus = StoreUpgradeTree.getRunGoldBonus();
+    const bonusGold = Math.floor(STATE.gold * runGoldBonus);
+    const totalGold = STATE.gold + bonusGold;
+
+    Persistence.addGold(totalGold);
     Persistence.addHighScore(STATE.wave, STATE.score);
+
+    if (bonusGold > 0) {
+        console.log(`Run Dividend: +${bonusGold} bonus gold (${(runGoldBonus * 100).toFixed(0)}%)`);
+    }
+
+    // Award Shop Tokens based on wave reached
+    const tokensEarned = Math.floor(STATE.wave * 2);
+    Persistence.addShopTokens(tokensEarned);
+    console.log(`Victory! Wave ${STATE.wave}: +${tokensEarned} Shop Tokens`);
 
     // Unlock next world
     const currentWorldIndex = WORLDS.findIndex(w => w.id === STATE.currentWorld.id);

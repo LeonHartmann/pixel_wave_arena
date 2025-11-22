@@ -3,6 +3,7 @@ import { ITEMS, ITEM_CATEGORIES, RARITY_TIERS } from './Items.js';
 import { PERM_UPGRADES } from './upgrades.js';
 import { Assets } from './Assets.js';
 import { SpriteGenerator } from './SpriteGenerator.js';
+import { StoreUpgradeTree } from './StoreUpgradeTree.js';
 
 export class CharacterScreen {
     constructor(showScreenFn) {
@@ -310,12 +311,30 @@ export class CharacterScreen {
         if (index === -1) return;
 
         const item = data.inventory.items[index];
-        const sellVal = item.sellPrice || 50;
+        const baseSellPrice = item.sellPrice || 50;
 
-        // Confirm? (Optional, maybe skip for flow)
-        if (confirm(`Sell ${item.name} for ${sellVal} Gold?`)) {
+        // Apply sell price bonus from Store upgrades
+        const sellPriceBonus = StoreUpgradeTree.getSellPriceBonus();
+        const sellVal = Math.floor(baseSellPrice * (1 + sellPriceBonus));
+
+        // Calculate Shop Tokens based on rarity
+        const TOKEN_VALUES = {
+            'COMMON': 5,
+            'RARE': 15,
+            'EPIC': 50,
+            'LEGENDARY': 200,
+            'MYTHIC': 1000
+        };
+        const tokensEarned = TOKEN_VALUES[item.rarity] || 5;
+
+        // Confirm with both gold and token rewards shown
+        if (confirm(`Sell ${item.name}?\n\n+${sellVal} Gold\n+${tokensEarned} Shop Tokens`)) {
+            // Award gold
             data.gold += sellVal;
-            
+
+            // Award Shop Tokens (this also adds Store XP)
+            Persistence.addShopTokens(tokensEarned);
+
             if (item.count > 1) {
                 item.count--;
             } else {
@@ -324,19 +343,22 @@ export class CharacterScreen {
                 // AND verify it's not currently equipped.
                 // Since we rely on UIDs, if we remove this UID from inventory, the loadout pointer becomes invalid.
                 // Let's unequip it first.
-                
+
                 this.unequipByUid(itemUid);
                 data.inventory.items.splice(index, 1);
             }
-            
+
             Persistence.save();
             this.renderInventory();
             this.renderSlots(); // Update slots if item was equipped and sold
-            
+
             // Update gold display if visible
             if (document.getElementById('shop-gold-display')) {
                 document.getElementById('shop-gold-display').innerText = data.gold;
             }
+
+            // Show notification for tokens earned
+            console.log(`Sold ${item.name}: +${sellVal} Gold, +${tokensEarned} Shop Tokens`);
         }
     }
 

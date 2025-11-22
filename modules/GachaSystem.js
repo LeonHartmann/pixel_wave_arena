@@ -1,5 +1,6 @@
 import { CRATE_TYPES, RARITY_TIERS, ITEMS } from './Items.js';
 import { Persistence } from './Persistence.js';
+import { StoreUpgradeTree } from './StoreUpgradeTree.js';
 
 export class GachaSystem {
     constructor() {
@@ -14,15 +15,26 @@ export class GachaSystem {
         for (let i = 0; i < crate.items; i++) {
             const rarity = this.rollRarity(crate.weights, crate.mythicChance);
             const itemDef = this.rollItem(rarity);
-            
+
             // Generate Unique Instance
             const instance = GachaSystem.generateItemInstance(itemDef); // Use static method
-            
+
             // Add to Inventory (Stacking Logic)
             this.addToInventory(instance);
-            
+
             rewards.push(instance);
         }
+
+        // Award Shop Tokens based on crate tier
+        const TOKEN_REWARDS = {
+            'BASIC_CRATE': 2,
+            'SILVER_CRATE': 5,
+            'GOLD_CRATE': 15,
+            'LEGENDARY_CRATE': 50
+        };
+        const tokensEarned = TOKEN_REWARDS[crateKey] || 2;
+        Persistence.addShopTokens(tokensEarned);
+        console.log(`Opened ${crateKey}: +${tokensEarned} Shop Tokens`);
 
         Persistence.save();
         return rewards;
@@ -65,11 +77,25 @@ export class GachaSystem {
 
         // Apply Variance if exists
         if (def.variance && instance.stats) {
+            // Get stat stability upgrade (excludes bottom X% of rolls)
+            const statStability = StoreUpgradeTree.getStatStabilityExclusion();
+
             for (const key in instance.stats) {
                 const base = instance.stats[key];
-                const modifier = 1 + (Math.random() * def.variance * 2 - def.variance);
+
+                // Standard variance creates modifier between (1 - variance) and (1 + variance)
+                // With stat stability, we shift the range up to exclude bottom portion
+                let randomValue = Math.random();
+
+                if (statStability > 0) {
+                    // Remap randomValue to exclude bottom statStability percent
+                    // e.g., if statStability = 0.25, map [0,1] to [0.25,1]
+                    randomValue = statStability + (randomValue * (1 - statStability));
+                }
+
+                const modifier = 1 + (randomValue * def.variance * 2 - def.variance);
                 let val = base * modifier;
-                
+
                 if (val > 10) val = Math.round(val);
                 else val = parseFloat(val.toFixed(1));
 
@@ -114,6 +140,14 @@ export class GachaSystem {
             existing.count += 1;
             newItem.isDuplicate = true; // For UI display
             newItem.count = existing.count; // Reflect current total
+
+            // Check for Duplicate Insurance upgrade
+            const dupeInsurance = StoreUpgradeTree.getDuplicateInsurance();
+            if (dupeInsurance && existing.count > dupeInsurance.threshold) {
+                // Convert excess duplicate into Shop Tokens
+                Persistence.addShopTokens(dupeInsurance.tokens);
+                console.log(`Duplicate Insurance: +${dupeInsurance.tokens} Shop Tokens (${existing.name} stack: ${existing.count})`);
+            }
         } else {
             data.inventory.items.push(newItem);
             newItem.isDuplicate = false;
