@@ -1,5 +1,6 @@
-# Markdown files
+# Markdown files (all except README.md)
 *.md
+!README.md
 
 # Gemini clipboard
 .gemini-clipboard
